@@ -1,0 +1,133 @@
+python vol.py -f memory.dmp imageinfo						#检测OS版本
+
+python vol.py -f memory.dmp kdbgscan						#检测OS版本
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 objtypescan			#搜索各种对象的地址
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 volshell			#返回volatility的shell
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 psscan				#扫描各进程详细信息
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 palist				#列出进程
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 psxview			#集合各种进程扫描方法
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 getsids -p xxx			#列出指定进程号的SID
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 privs -p xxx			#列出指定进程号的privilege
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 heaps -p xxx			#列出指定进程号的heap
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 handles -p xxx			#列出指定进程号的handle
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 ldrmodules -p xxx		#列出LoadLinks，MemoryLinks，InitLinks三个DLL链
+
+python vol.py -f memory.dmp --profile=Win7SP1x64 procdump --dump-dir=OUTDIR/	#导出所有进程
+
+python vol.py -f memory.dmp --profile=Win7SP0x64 dlllist -p xxx			#列出指定进程号所引用的所有DLL
+
+python vol.py -f memory.dmp --profile=Win7SP1x64 dlldump -p xxx --regex=crypt --ignore-case --dump-dir=OUTDIR/	#导出crypt*.dll的模块(忽略大小写)
+
+python vol.py -f memory.dmp --profile=Win7SP1x64 -p xxx dlldump --base xxxxxxxxxxxxxxxx –-dump-dir=OUTDIR/	#导出基址为xxx的DLL
+
+*当DLL代码被混淆时，使用rundll32.exe将可疑DLL加载，然后使用dlllist列出所有加载进内存的DLL(此时可疑DLL已加密)，这时再用dlldump导出解密后的恶意DLL
+
+python vol.py –f memory.mem --profile=Win7SP1x64 malfind			#检测恶意代码(通过检测是否有RWX的VAD地址块)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 connections			#查看所有网络连接
+
+python vol.py –f memory.mem --profile=Win7SP1x64 connscan			#查看之前断开的网络连接
+
+python vol.py –f memory.mem --profile=Win7SP1x64 hivelist			#列出一些重要的注册表键的地址
+
+python vol.py –f memory.mem --profile=Win7SP1x64 printkey -K xxx		#打印注册表中XXX键的详细信息
+
+python vol.py –f memory.mem --profile=Win7SP1x64 userassist			#打印注册表的userassist键
+
+python vol.py –f memory.mem --profile=Win7SP1x64 shimcache			#打印用户最近运行过的软件
+
+python vol.py –f memory.mem --profile=Win7SP1x64 shellbags			#打印最近被操作过的文件
+
+python vol.py –f memory.mem --profile=Win7SP1x64 hashdump			#dump出哈希密码
+
+python vol.py –f memory.mem --profile=Win7SP1x64 lsadump			#dump出LSA密码(各种简单服务的密码)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 sockets			#打印所有的套接字
+python vol.py –f memory.mem --profile=Win7SP1x64 sockscan			#打印所有的套接字
+
+python vol.py –f memory.mem --profile=Win7SP1x64 connections			#打印所有的网络连接
+python vol.py –f memory.mem --profile=Win7SP1x64 connscan			#打印所有的网络连接
+
+python vol.py –f memory.mem --profile=Win7SP1x64 yarascan -p xxx -W -Y "XX.XXX.5.140"		#在pid为xxx的内存空间里查找"XX.XXX.5.14"格式的数据
+
+python vol.py –f memory.mem --profile=Win7SP1x64 yarascan -p xxx --wide -Y "http"		#在pid为xxx的内存空间里查找"http"格式的数据
+
+python vol.py –f memory.mem --profile=Win7SP1x64 -p xxx -Y "{38 24 d8 75}"			#在pid为xxx的内存空间里查找"38 24 d8 75"格式的十六进制
+ro
+python vol.py –f memory.mem --profile=Win7SP1x64 ethscan			#打印数据包
+
+python vol.py –f memory.mem --profile=Win7SP1x64 netscan			#打印所有的网络连接(适用于Win7以上)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 iehistory -p xxx		#打印IE进程的历史记录(只适用于IE4 ~ IE9)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 yarascan -Y "/[a-zA-Z0-9\-\.]+\.(com|org|net|mil|edu|biz|name|info)/" -p xxx	#搜索网址
+
+python vol.py –f memory.mem --profile=Win7SP1x64 filescan | grep -i hosts	#查找hosts文件
+
+python vol.py –f memory.mem --profile=Win7SP1x64 dumpfiles -Q 0xXXX -D OUTDIR --name	#将基址为0xXXX的文件dump出来
+
+python vol.py –f memory.mem --profile=Win7SP1x64 svcscan --verbose			#列出所有开启的服务
+
+通过NtLoadDriver加载驱动，不会被记录到系统日志，驱动结构体也不会出现在services.exe，用svcscan插件也自然搜索不到
+NtSetSystemInformation是个更隐蔽的加载驱动的方法，这种方法还不需要注册注册表项，而且驱动加载后很难被卸载
+
+python vol.py –f memory.mem --profile=Win7SP1x64 modules				#通过链表展示所有模块
+
+python vol.py –f memory.mem --profile=Win7SP1x64 modscan				#通过扫描模块结构来展示所有模块
+
+python vol.py –f memory.mem --profile=Win7SP1x64 unloadedmodules			#展示所有已被卸载的模块
+
+python vol.py –f memory.mem --profile=Win7SP1x64 moddump --regex=tcp --ignore-case --dump-dir=OUTDIR/	#查找"*tcp*"模块
+
+python vol.py –f memory.mem --profile=Win7SP1x64 threads -F OrphanThread		#扫描孤儿线程
+
+python vol.py –f memory.mem --profile=Win7SP1x64 driverscan				#扫描所有驱动
+
+python vol.py –f memory.mem --profile=Win7SP1x64 driverirp -r tcpip			#查找tcpip驱动所调用的所有IRP函数，用以检查是否被HOOK
+
+python vol.py –f memory.mem --profile=Win7SP1x64 devicetree				#查看内存的设备树
+
+python vol.py –f memory.mem --profile=Win7SP1x64 sstd					#枚举SSTD表
+
+python vol.py –f memory.mem --profile=Win7SP1x64 callbacks				#列出所有内核回调
+
+python vol.py –f memory.mem --profile=Win7SP1x64 timers					#列出所有计时器
+
+python vol.py –f memory.mem --profile=Win7SP1x64 sessions				#列出所有会话下的所有进程
+
+python vol.py –f memory.mem --profile=Win7SP1x64 consoles				#查看控制台历史命令
+
+python vol.py –f memory.mem --profile=Win7SP1x64 wndscan				#展示window station(主要用于审计粘贴板)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 wintree | grep CLIPBRDWNDCLASS		#列出所有监听粘贴板的进程
+
+python vol.py –f memory.mem --profile=Win7SP1x64 deskscan				#列出每个桌面所拥有的进程
+
+python vol.py –f memory.mem --profile=Win7SP1x64 mftparser				#解析MFT文件
+
+python vol.py –f memory.mem --profile=Win7SP1x64 apihook				#查找被挂钩的函数(通过侦测有无JMP到外部地址的命令)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 truecryptpassphrase			#解析TureCrypt
+python vol.py –f memory.mem --profile=Win7SP1x64 truecryptsummary			#汇总TureCrypt
+python vol.py –f memory.mem --profile=Win7SP1x64 truecryptmaster			#提取主要的turecrypt
+
+strings -td -el -a memory.dmp >> strings.txt						#提取dump文件中的字符串(-el:编码	-td:十进制偏移	-a:覆盖全文件)
+python vol.py -f memory.mem --profile=Win7SP1x64 strings -s strings.txt > translated.txt	#优化文件strings.txt中的字符串的信息
+
+python vol.py –f memory.mem --profile=Win7SP1x64 cmdscan				#扫面历史CMD命令
+
+python vol.py –f memory.mem --profile=Win7SP1x64 consoles				#提取所有控制台的历史命令(包括python,powershell等)
+
+python vol.py –f memory.mem --profile=Win7SP1x64 timeliner				#展示时间轴事件
+
+python vol.py –f memory.mem --profile=Win7SP1x64 cachedump				#获取缓存dump(可获得在内存中的密码)

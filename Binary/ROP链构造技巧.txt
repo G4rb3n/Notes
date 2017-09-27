@@ -1,0 +1,25 @@
+1 . GOT 覆盖：
+
+	这个技巧帮助攻击者，
+	将特定 Libc 函数的 GOT 条目覆盖为另一个 Libc 函数的地址（在第一次调用之后）。
+	但是它也可以覆盖为execve函数的地址 -- 当偏移差加到GOT[getuid]的时候。
+	我们已经知道了，在共享库中，函数距离其基址的偏移永远是固定的。
+	所以，如果我们将两个 Libc 函数的差值（execve和getuid）加到getuid的 GOT 条目，
+	我们就得到了execve函数的地址。之后，调用getuid就会调用execve
+	
+	offset_diff = execve_addr - getuid_addr
+	GOT[getuid] = GOT[getuid] + offset_diff
+
+
+2 . GOT 解引用：
+	
+	这个技巧类似于 GOT 覆盖，
+	但是这里不会覆盖特定 Libc 函数的 GOT 条目，而是将它的值复制到寄存器中，
+	并将偏移差加到寄存器的内容。因此，寄存器就含有所需的 Libc 函数地址。
+	例如，GOT[getuid]包含getuid的函数地址，将其复制到寄存器。
+	两个 Libc 函数（execve和getuid）的偏移差加到寄存器的内容。
+	现在跳到寄存器的值就调用了execve
+
+	offset_diff = execve_addr - getuid_addr
+	eax = GOT[getuid]
+	eax = eax + offset_diff

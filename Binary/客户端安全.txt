@@ -1,0 +1,119 @@
+ 1. 反调试方法      
+	花指令、花循环、内核计时器、父进程检查、检查调试器、动态加解密代码、IAT加密、自调试、CRC校验、
+	将不会用到的代码控件设置为NO_ACCESS、固定屏幕、破坏异常处理环境、执行过的代码就破坏掉、
+	调用IsDebuggerPresent判断该函数首地址机器码是否是CC、判断PEB偏移2的BeingDebugged值 
+ 
+ 
+ 2. 保护游戏数据不被修改      
+	数据加密、关键数据保存到服务器  
+ 
+ 
+ 3. detour函数什么情况下hook不成功（主旨是栈平衡）      
+	1）自己定义的detour函数和目标target函数的参数很返回值完全一致     
+	2）函数调用方式的确定与选择     
+	3）现场保护      
+	4）this指针的内容存入ecx     
+	5）非法内存访问     
+	6）多线程先挂起再hook 
+
+ 
+ 4. 虚函数表      
+	http://blog.csdn.net/haoel/article/details/1948051 
+
+
+ 5. 花指令怎么添加     
+	硬编码、跳转  
+
+
+6. 不用循环结构计算字符串长度     
+	递归函数  
+
+7. 程序发生死锁的时候怎么定位死锁位置      
+	http://blog.csdn.net/xxin_w/article/details/8449855 
+
+
+8. static、const的作用和实现原理      
+	static：隐藏（局部变量仅在作用范围可见、函数或全局变量只在定义的文件内有效）、
+	保持变量内容的持久（变量会被存放在全局变量区）、默认初始化为0（只被初始化一次）。      
+	const：可用于修饰参数、变量、返回值、不修改数据成员的成员函数，表示内容不可被修改。
+	只在编译期做保护，而非运行期保护。会把const变量编译到readonly的内存页上。 
+
+
+9. 怎么调试一个依赖于另一个进程的程序      
+	进程开头构造一个死循环，attach之后再修改回来 
+
+
+10. shellcode重定位问题      
+	使用call $+5 
+	pop eax可以得到当前VA。 
+
+
+11. 怎么定位PEB     
+	fs:[0]——SEH链    fs:[18h]——TEB    mov eax, fs:[18h] mov eax, [eax+30h]——PEB    
+	PEB之后存储着LastErrorValue     
+	异常处理函数注册方法：  push offset _SEH_HANDLER push fs:[0] mov fs:[0],esp  
+
+	
+12. 怎么定位进程EPROCESS      
+	获取ring0权限，fs:[120h]处存放_KPCB——获取fs:[124h]处_KTHREAD——获取_KAPC_STATE——_KAPC_STATE偏移10h处    
+ 
+
+13. 遇到过哪些比较难得crackme  
+
+
+14. 键盘注入都有哪些方法，怎么防止按键记录被获取      
+	方法：按键嗅探、消息拦截、API hook         
+	对抗全局hook用WH_DEBUG，其它可以生成假的按键状态，校验API是否完整 
+
+
+15. 对抗setwindowshook      
+	WH_DEBUG： 进行程序自身反HOOK时只要知道判断idThread和idThreadInstaller是否相等就可了。如果相等，
+	说明即将被调用的钩子是自己线程中钩子；如果不等，说明是其它线程中的钩子，只要返回非0值就可以了，
+	这时即将被调用的钩子就不会执行了。由于低级钩子是后安装的先执行的，为了避免后安装的钩子获取键盘记录，
+	可以通过一个定时器，不停地对它的调式钩子和低级键盘钩子进行Unhook，然后马上再Hook。
+	QQ通过给自己在应用层设置这个低级键盘钩子，并不断脱钩、挂钩，来保证自己在应用层上是最先得到键盘消息的。
+	既然是最先得到了，那么接下来要进行保护就容易了，自然就是先取得正确的按键信息，然后阻止这个消息继续传递下来给别人。
+	
+	
+16. 注入方法都有哪些      
+	远程线程注入、注册表注入、DLL劫持、输入法注入、lsp注入 
+	
+17. IDA中结构的使用  
+
+
+18. 采取什么措施可以使定义的字符串不出现在data段     
+	花指令、加密、字符串开头加干扰码 
+
+
+19. 证书信息是怎么保存在文件中的 
+
+
+20. EB/E8/E9机器指令      
+	E8 call        E9 jmp        EB jmp short 
+	
+
+21. 枚举进程的方法      
+	CreateToolhelp32Snapshot()，Process32First()和Process32Next()、EnumProcesses和EnumProcessModules、WTSOpenServer()和WTSEnumerateProcess()、NtQuerySystemInformation  
+	
+	
+22. 可变参数函数怎样不通过VA_函数获取参数      
+	ebp+8得到格式化字符串地址，通过判断里面独立的%来确定参数个数 
+	
+
+23. 对抗远程线程      
+	DLL_THREAD_ATTACH：创建线程的时候线程会调用当前地址空间的DLL的dllmain函数，并收到DLL_THREAD_ATTACH，此时判断线程入口是不是LoadLibrary，是的话就是远程线程，kill掉。  
+	
+
+24. 输入法注入 
+
+
+25. 硬件断点怎么利用 
+
+
+26. 获取kernel32.dll基址       
+
+
+通过PEB得到初始顺序模块表，此为双向链表，第二个即是kernel32.dll基地址 
+
+
+27. DEP和APC

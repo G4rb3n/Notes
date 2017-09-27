@@ -1,0 +1,214 @@
+0×01. 进程检测技巧
+许多文章都会提到通过检测进程名字的方式来判断当前环境是否是虚拟机，那么自然要去比较进程名字了，而获取当前进程列表也无外乎几个固定的套路。
+我发现在检测特定进程名字的时候，是会触发火眼的监控逻辑的。
+比如，一个盗号木马可能会去检测有没有QQ.exe，那么火眼会在报告中指出样本程序尝试去检测QQ.exe；
+而如果以同样的逻辑去检测虚拟机，效果就和预期的不太一致了，比如报告中会提示你的程序尝试去检测vmtoolsd.exe，呵呵！
+绕过的方法也很简单，样本程序中不保存进程名字的明文，而是保存经过特定的运算之后的值（加密后的密文）。
+我们在获取到进程的名字之后，也要先进行一次这样的运算再判断。这种方法是我大学做病毒分析实习的时候在样本中学到的，
+大家可以在Google中搜一下explorer.exe的MD5值cde09bcdf5fde1e2eac52c0f93362b79。
+
+0×02. 沙箱检测还可以这么玩
+2.1 基于Windows ProductId检测
+这也算是比较老的一种方法了，
+Windows ProductId位于注册表的HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows NT\CurrentVersion下的ProductID键。
+比如Anubis沙箱常见的值为76487-640-1457236-23837，去Google一下这个字符串就知道使用的普遍程度了。
+这个方法针对Cuckoo Sandbox是没用的，Cuckoo Sandbox在执行sample之前会生成一个随机的ProductId来填充注册表。
+Malwr是基于Cuckoo构建的产品。这种检测行为会触发监控逻辑哟~
+
+2.2 基于ComputerName检测
+估计公司电脑的ComputerName大多是有规则的，或者是基于同一个镜像制作的虚拟机。
+比如我之前测试翰海源的文件B超的时候，发现其ComputerName都是xiaochen打头的。
+后来的后来，好像又出现了CHENHONG打头的，估计就是同一个人了。后面我会给出其他几家厂商的特征。
+
+2.3 基于内存大小检测
+有的厂商估计不太愿意浪费硬件，给沙箱只分配了少量内存，比如Anubis只给了128M，Comodo只给了256M，国内的翰海源和金山火眼则是512M。
+如果你的PC机只有这么小的内存，那只能说你是在是太节俭了。当然，考虑到有的服务器可能就是这个样子，所以怎么检测就看实际情况了。
+同样的，基于硬盘大小去检测我想也是可以的。
+
+2.4 基于样本路径检测
+样本上传到沙箱之后，样本自身的路径也可以当做一个特征来检测。
+比如Comodo的沙箱（是的，不是HIPS，是在线沙箱）的样本路径固定位C:\TEST\sample.exe，这个就太明显了。
+
+一. 针对虚拟机的检测
+
+1. 利用虚拟机的特殊环境指纹信息
+
+（1）注册表信息
+
+     比如在vmware的虚拟机中，在注册表中搜索"vmware"字样，可以得到特别多的键值
+
+     病毒文件会在执行开始去RegOpenKeyExA()对应的虚拟机注册表键值，如果返回为非0，  
+
+     则说明在虚拟机环境中。
+
+    尤其是注册表中硬件信息，经常被病毒检测使用的：
+
+    HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\services\Disk\Enum
+
+    或者直接检测IDE\DISK  会有QEMU,vbox,vmware,virtualhd的字样等等，这种检测技术在样本中很常见。
+
+（2）进程信息
+
+    在虚拟机启动后，进程列表可以看到部分虚拟机的进程存在
+
+    病毒样本常会遍历的虚拟机进程有：
+
+    "VBoxTray.exe"
+
+    "VBoxService.exe"
+
+    "VMwareUser.exe"
+
+    "VMwareTray.exe"
+
+    "VMUpgradeHelper.exe"
+
+    "vmtoolsd.exe"
+
+    "vmacthlp.exe"
+
+（3）特殊文件信息
+
+     比如典型的虚拟机驱动sys文件会被病毒样本遍历
+
+比如GetFileAttributeA()执行c:\windows\system32\drivers\winmouse.sys
+
+如果返回-1说明不存在该文件，否则样本就不再执行了。
+
+（4）虚拟机硬件信息
+
+     虚拟机的网卡信息会有固定指纹
+
+     MAC地址：
+
+     00:05:69:xx:xx:xx VMware
+
+     00:0C:29:xx:xx:xx VMware
+
+     00:1C:14:xx:xx:xx VMware
+
+     00:50:56:xx:xx:xx VMware
+
+     00:15:5D:xx:xx:xx Hyper V 
+
+     00:16:3e:xx:xx:xx Xen
+
+（5）安装的系统环境信息，比如卷信息
+
+比如有病毒样本就会通过kernel32.getvolumeinformationA查询系统卷信息，因为虚拟机的各个操作系统分区是从宿主机复制过来的，
+就存在各个卷信息相同的情况，而且如果黑客掌握了某款沙箱产品固有操作系统的卷信息指纹，也就很容易逃避过去。
+
+（手工可以在cmd下用wmic.exe volume查看）
+
+2. 利用虚拟机的指令的特殊性的逃逸
+
+下面四种技术在虚拟机和反调试对抗中也占据了较大的比例
+
+（1）vmware虚拟机通信端口指令
+
+mov eax, 'VMXh';
+
+mov ecx, 10; // "CODE" to get theVMware Version 
+
+mov edx, 'VX'; // Port Number  
+
+in eax, dx; // Read port, On return EAXreturns the VERSION  
+
+cmp ebx, 'VMXh'; // is it VMware
+
+在病毒样本中，会通过上述指令来判断，如果是vmware虚拟环境，上述的in指令才能正常执行，否则会造出异常，
+病毒样本就可以走异常分支执行真正的恶意代码，在某视频中被提示不能在虚拟机中运行，发现就存在该段代码。
+
+（2）利用LDT和GDT
+
+虚拟机中的LDT（本地描述符表）和GDT（全局描述符表）和真实环境是有不同的，也是基于IDT (中断描述符表)检测（redpill检测虚拟机技术）的一种改进版，
+LDT，GDT的基地址是保存在相应的LDTR和GDTR寄存器中，只有当LDT基地址于0x0000（只有两个字节）时为真实机器，而GDT的基址为0XFFXXXXXX情况说明为虚拟机。
+
+（3）利用STR的检测
+
+STR指令用于将任务寄存器TR中的段选择器存储到到目标操作数中，当STR读取的地址等于0x0040xxxx时说明在虚拟机中，否则为真实主机
+
+ (4) 利用时间差
+
+通过执行特定代码，比较虚拟机和真实主机的运行时间来判断是否位于虚拟机中，比如RDTSC指令将计算机启动以来CPU运行周期存在到EDX:EAX中，
+由于虚拟机是模拟系统，所以一条指令在虚拟机中执行的时间要长过真实主机，比如利用交换指令xchg。
+
+二. 针对沙箱技术特点的技术性逃逸
+
+1. 关于时间
+
+沙箱执行分析一个样本的时间是有限的，所以一部分样本就采取了sleep类的绕过方法，但是sleep的方式有很多种。
+
+（1）Sleep函数的调用
+
+SleepEx(), NtDelayExecution(),  PDF 的JS函数setTimeout()，比如Trojan Nap病毒
+
+但是现在好多沙箱会对sleep函数进行修改，比如强制修改成1S，但是如果样本加以对时间的判断，那一样会跑不出行为。
+
+（2）Stalling code 循环函数代码，用来占用时间
+
+这种函数的比较典型的特点就是函数成结构独立性，一般不具有跳转的结构，这种在指令级的沙箱就会占据优势，
+比如据lastline说其指令级的沙箱就可以处理该问题，典型病毒W32.DelfInj
+
+（3）根据时间条件选择性触发
+
+GetLocalTime() 获取时间， 比如Trojan Hastati 只有在特殊时间才会触发，如果不满足触发时间，就会循环sleep
+
+ 
+
+2．关于交互
+
+由于真实环境是有人的点击或者其他动作的，一般的沙箱环境不存在这种交互的动作，有些恶意样本，充分利用这点，
+
+   （1 比如有鼠标click被捕获到的时候，才会联通C&C，比如 ：
+
+   UpClicke病毒，SetWinodwsHookExA using0Eh as a parameter value. 
+   This setting installs   the Windows hook procedure WH_MOUSE_LL, usedto monitor low-level mouse inputs.
+   当恶意样本捕获到upclick（点击释放）的时候才会执行恶意代码部分。
+
+   BaneChant病毒，监听三次以上的click动作，才会执行恶意动作
+
+  （2 故意弹出窗口，只有用户点击确定按钮，才会执行恶意动作
+
+   比如EXE或者DLL执行messagebox函数，Adobe PDF中利用JS脚本，执行app.alert()方法，然后当用户点击OK,之后，在调用app.launchURL()打开恶意链接。
+
+  （3 监视短时间内鼠标的移动范围，通过GetCursorPos获取鼠标位置，移动快的被病毒标识为沙箱环境
+
+  （4有RTF文档，要滚动到第二页之类的才能执行样本
+
+  （5 判断鼠标的移动，当不停在移动，或者不移动时候，都认为在分析环境中，样本不执行，还有类似的对窗体的判断等等。
+
+3. 关于沙箱本身的特性
+
+（1）样本执行开始，首先去访问链接地址，甚至是下载东西，一是可以验证网络联通性，二是因为沙箱环境是不是联网状态，
+如果网络畅通，然后才会执行真正的恶意部分，比如chinad就会利用这个特性会访问baidu，还有比如大名鼎鼎的蠕虫conficker。
+
+（2）利用rootkit的典型特点，隐藏进程，利用PsSetCreateProcessNotifyRoutine（监控系统的创建和删除）
+这个系统的回调函数API进行remove掉所有的回调函数，导致监控失灵
+
+（3）判断文件被执行时候的名字，GetModuleFilenameW()获取执行文件的路径，可检测方式可以通过样本中存入的沙箱常用的名字做对比，
+比如sample这个名字，个人认为如果样本本身名字固定的话，或者有特殊字符存在，还是跟自身的名字对比，绕过的成功率更高。
+
+（4）重启再启动，用重启后才执行恶意的方式逃避沙箱
+
+（5）DLL检测，会对加载DLL的执行文件进行hash校验，如果仅仅通过load或者run32dll.exe的方式，会被检测出来。
+
+4. 关于猥琐构造技巧
+
+（1）首先利用探针收集部分应用的版本信息(flash:$version,PDF:app.viewerVersion）版本不符合，不执行，因为毕竟沙箱等环境是有限的。
+
+（2）内嵌方式，比如在图片或者FLASH等等文件里，嵌入加密的PE文件，注意这不是shellcode的方式，
+仅仅是作为数据的传输载体，在机器上已经有其他样本在等待这些加密数据
+
+ 
+
+5. Filelessmalware样本的出现
+
+该类样本为的就是为了逃避关于文件级的检测方法，样本执行以后直接将恶意shellcode写在注册表键值里，并且利用系统本身的powershell执行，
+这种情况下有内存分析模块，就显得尤为重要了。比如Phasebot病毒，首先将shellcode写入
+
+HKEY_CURRENT_USER\Software\Microsoft\ActiveSetup\Installed Components\{Bot GUID}
+
+将采用Rc4Encoded32 和Rc4Encoded64加密后的shellcode写入到上述键值中，然后写入javascript脚本键，然后调用powershell进行执行脚本操作，
+才会有恶意动作出来，比如释放文件到启动目录，然后通过NtQueryDirectoryFile API的方式隐藏文件，通过NtReadVirtualMemory的方式隐藏进程，
+这种样本或许逃逸不出我们的沙箱，但是这种fileless类型的攻击会更加进步和常见，或者采用数据流的攻击方式。

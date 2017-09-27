@@ -1,0 +1,33 @@
+gdb：
+
+	info breakpoints	查看断点
+	disassemble main	反汇编main函数
+	x				查看内存地址	/x 十六进制格式		/i 指令格式	/数字	 要显示的范围
+	b *address		在address处下断
+	r				运行
+	c				继续运行
+	n				下一步（c层面）
+	s				下一步（渐入）（c层面）
+	ni				下一步（汇编层面）
+	si				下一步（渐入）（汇编层面）
+
+peda：
+
+	stack 数字			查看栈环境
+	aslr				查看ASLR标志
+	checksec			查看各种安全保护机制
+	dumprop			查看ROP列表
+	elfheader			查看ELF文件的头部
+	elfsymbol			查看ELF文件的符号表
+	lookup			查询一个内存范围的所有的地址和参考地址 
+	distance			计算两个地址之间的距离
+	dumpmem		导出指定的内存
+	getpid			获取PID
+	ropgadget		获取一个常用ROP
+	shellcode			获取一个常用shellcode
+	xormem			xor内存
+
+objdump：
+	
+	objdump -S	在源代码中展示
+	objdump -R	展示对应的动态链接库的符号

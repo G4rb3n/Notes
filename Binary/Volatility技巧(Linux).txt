@@ -1,0 +1,135 @@
+﻿python vol.py -f memory.dmp --profile=XXX linux_proc_maps -p XXX			#查看指定进程的内存基址
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_dump_map -p XXX -s 0xXXXXX -D dir	#把XXX进程的0xXXXXX处的内存段dump出来
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_psaux					#列出进程表
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_psenv					#列出各进程所引用的环境变量
+
+内核进程是不会引用环境变量的，所以当恶意进程伪装内核进程时，可以检查它是否包含环境变量
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_lsof -p XXX				#列出指定进程所引用的各文件描述符及对应的路径
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_bash					#列出bash历史命令
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_bash_hash				#列出bash中命令的真实路径
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_netstat					#查看主机的网络连接
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_pkt_queues -D dir			#dump出所有网络数据包
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_ifconfig				#查看主机网络配置
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_list_raw				#查看创建了原始套接字的进程
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_route_cache -R				#查看路由缓存(显示域名)
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_arp					#列出ARP表
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_iomem					#列出硬件内存映射
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_dmesg					#打印内核调试信息
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_lsmod -P				#显示已加载的内核模块及其参数
+
+
+python vol.py -f memory.dmp --profile=XXX linux_lsmod -S				#显示已加载的内核模块及其sections
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_moddump -D dir -r XXX			#将XXX模块dump出来
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_mount					#打印文件挂载信息
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_enumerate_files				#从根目录枚举文件
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_recover_filesystem -D dir		#将目标文件系恢复到dir目录
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_dentry_cache				#从内存中恢复文件系统的时间轴
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_find_file -i 0xXXXXX -O XXX.dump	#从地址0xXXXXX处提取文件(用-F /tmp/XXX查看目标文件的基地址)
+
+
+
+python vol.py -f memory.dmp --profile=XXX linux_malfind					#查找恶意(可疑的rwx内存区)的shellcode
+
+
+python vol.py -f memory.dmp --profile=XXX linux_process_hollow -p XXX -b 0xXXXXX -P XXX/XXX.bin		#检测目标进程是否被hollow，-P参数指定正常的二进制文件
+
+python vol.py -f memory.dmp --profile=XXX linux_library_list -p XXX			#查找指定进程所加载了的共享库
+
+
+python vol.py -f memory.dmp --profile=XXX linux_ldrmodules -p XXX			#交叉显示指定进程已加载的而二进制文件及其加载方式
+
+python vol.py -f memory.dmp --profile=XXX linux_librarydump -p XXX -b 0xXXXXX -D dir	#将库dump出来
+
+python vol.py -f memory.dmp --profile=XXX linux_plthook -p XXX				#检查PLT表是否被改写
+
+python vol.py -f memory.dmp --profile=XXX linux_apihooks -p XXX				#检查进程所调用的API是否被HOOK
+
+
+python vol.py -f memory.dmp --profile=XXX linux_check_modules				#找出可疑的加载模块(没在普通模块链中出现，却出现在sysfs目录下)
+
+python vol.py -f memory.dmp --profile=XXX linux_hidden_modules				#利用穷举的方法找出隐藏的模块(普通模块链和sysfs目录下均未发现)
+
+python vol.py -f memory.dmp --profile=XXX linux_kernel_opend_files			#查看内核模块所创建的文件句柄(一般内核模块是不直接操作文件的)
+
+python vol.py -f memory.dmp --profile=XXX linux_psxview					#综合多种扫描进程的方法
+
+python vol.py -f memory.dmp --profile=XXX linux_check_creds				#查看具有相同credit的进程(检查是否有盗取root身份的进程)
+
+python vol.py -f memory.dmp --profile=XXX linux_check_fop				#列出被所有被提权的函数
+
+python vol.py -f memory.dmp --profile=XXX linux_check_syschall				#检查是否有系统API被HOOK
+
+python vol.py -f memory.dmp --profile=XXX linux_keyboard_notifier			#扫描可疑的按键响应机制
+
+python vol.py -f memory.dmp --profile=XXX linux_check_tty				#检查TTY驱动是否被HOOK
+
+python vol.py -f memory.dmp --profile=XXX linux_check_afinfo				#检查网络协议相关的API是否被HOOK
+
+python vol.py -f memory.dmp --profile=XXX linux_netfilter				#检查netfilter是否被HOOK
+
+python vol.py -f memory.dmp --profile=XXX linux_check_inline_kernel			#扫描内核层的内联钩子
+
+python vol.py -f memory.dmp --profile=XXX linux_tmpfs					#扫描所有临时文件

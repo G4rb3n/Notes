@@ -1,0 +1,4 @@
+leave = mov ebp,esp	//esp = ebp
+	     pop ebp		//ebp = *esp
+
+ret	 = pop eip（pop指令无法将值弹入CS寄存器，要将堆栈中的值加载到CS寄存器，请使用ret指令）
