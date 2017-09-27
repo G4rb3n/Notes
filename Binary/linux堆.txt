@@ -1,0 +1,21 @@
+当前针对各大平台主要有如下几种堆内存管理机制：
+
+dlmalloc – General purpose allocator
+
+ptmalloc2 – glibc
+
+jemalloc – FreeBSD and Firefox
+
+tcmalloc – Google
+
+libumem – Solaris 
+
+本文主要学习介绍在linux glibc使用的ptmalloc2实现原理。
+
+本来linux默认的是dlmalloc，但是由于其不支持多线程堆管理，所以后来被支持多线程的prmalloc2代替了。
+
+
+当然在linux平台*malloc本质上都是通过系统调用brk或者mmap实现的
+
+brk函数从Heap区域分配堆，mmap函数从Memory Mapping Segment区域分配堆，
+两个区域基地址相差得挺多，所以通过判断基地址就能分辨出堆是由哪种方式创建的
