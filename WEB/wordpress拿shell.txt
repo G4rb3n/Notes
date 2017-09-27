@@ -1,0 +1,3 @@
+最新版wordpress，进入后台，安装插件选项，上传得默认格式为zip
+本地将一句话a.php压缩成(b.)zip上传，上传后wordpress自动解压缩
+默认解压后地址 wp-content/upgrade/b/a.php

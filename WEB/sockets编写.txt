@@ -1,0 +1,8 @@
+1 . 普通的HTTP式exp直接使用urllib2.urlopen(url)函数构造（例如构造畸形头，恶意数据什么的）
+
+2 . 若是在TCP以上（如心脏出血的TLS层）的exp，则可先socket.socket然后s.connect创建常规的TCP
+     套接字，再根据各种协议的结构格式s.send出数据，即可构造畸形包
+
+3 . 若是像nmap那样的畸形TCP/UDP包，就得构造原始套接字了
+
+4 . 若是再下层ARP欺骗包，则使用scapy.Ether构造底层包

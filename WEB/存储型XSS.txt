@@ -1,0 +1,2 @@
+在保存用户信息的时候头像字段为http://xxx.com/abc.jpg，将该字段改成x" onerror=alert(1)，
+此漏洞成因是因为头像名用户可控

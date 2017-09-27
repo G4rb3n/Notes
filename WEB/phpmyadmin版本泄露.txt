@@ -1,0 +1,6 @@
+在网址根路径 后面添加 readme.php ,README ,changelog.php,Change, 
+Documetation.html ,Documetation.txt ,translators.html
+等(注意区分大小写) 就可以看到 phpmyadmin 的相关版本信息了，
+这个方法也是通杀的，只要管理员不把他们删掉
+
+/phpmyadmin/setup

