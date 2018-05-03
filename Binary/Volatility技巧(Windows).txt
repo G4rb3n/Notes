@@ -1,133 +1,133 @@
-python vol.py -f memory.dmp imageinfo						#¼ì²âOS°æ±¾
+python vol.py -f memory.dmp imageinfo						#æ£€æµ‹OSç‰ˆæœ¬
 
-python vol.py -f memory.dmp kdbgscan						#¼ì²âOS°æ±¾
+python vol.py -f memory.dmp kdbgscan						#æ£€æµ‹OSç‰ˆæœ¬
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 objtypescan			#ËÑË÷¸÷ÖÖ¶ÔÏóµÄµØÖ·
+python vol.py -f memory.dmp --profile=Win7SP0x64 objtypescan			#æœç´¢å„ç§å¯¹è±¡çš„åœ°å€
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 volshell			#·µ»ØvolatilityµÄshell
+python vol.py -f memory.dmp --profile=Win7SP0x64 volshell			#è¿”å›volatilityçš„shell
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 psscan				#É¨Ãè¸÷½ø³ÌÏêÏ¸ĞÅÏ¢
+python vol.py -f memory.dmp --profile=Win7SP0x64 psscan				#æ‰«æå„è¿›ç¨‹è¯¦ç»†ä¿¡æ¯
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 palist				#ÁĞ³ö½ø³Ì
+python vol.py -f memory.dmp --profile=Win7SP0x64 pslist				#åˆ—å‡ºè¿›ç¨‹
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 psxview			#¼¯ºÏ¸÷ÖÖ½ø³ÌÉ¨Ãè·½·¨
+python vol.py -f memory.dmp --profile=Win7SP0x64 psxview			#é›†åˆå„ç§è¿›ç¨‹æ‰«ææ–¹æ³•
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 getsids -p xxx			#ÁĞ³öÖ¸¶¨½ø³ÌºÅµÄSID
+python vol.py -f memory.dmp --profile=Win7SP0x64 getsids -p xxx			#åˆ—å‡ºæŒ‡å®šè¿›ç¨‹å·çš„SID
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 privs -p xxx			#ÁĞ³öÖ¸¶¨½ø³ÌºÅµÄprivilege
+python vol.py -f memory.dmp --profile=Win7SP0x64 privs -p xxx			#åˆ—å‡ºæŒ‡å®šè¿›ç¨‹å·çš„privilege
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 heaps -p xxx			#ÁĞ³öÖ¸¶¨½ø³ÌºÅµÄheap
+python vol.py -f memory.dmp --profile=Win7SP0x64 heaps -p xxx			#åˆ—å‡ºæŒ‡å®šè¿›ç¨‹å·çš„heap
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 handles -p xxx			#ÁĞ³öÖ¸¶¨½ø³ÌºÅµÄhandle
+python vol.py -f memory.dmp --profile=Win7SP0x64 handles -p xxx			#åˆ—å‡ºæŒ‡å®šè¿›ç¨‹å·çš„handle
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 ldrmodules -p xxx		#ÁĞ³öLoadLinks£¬MemoryLinks£¬InitLinksÈı¸öDLLÁ´
+python vol.py -f memory.dmp --profile=Win7SP0x64 ldrmodules -p xxx		#åˆ—å‡ºLoadLinksï¼ŒMemoryLinksï¼ŒInitLinksä¸‰ä¸ªDLLé“¾
 
-python vol.py -f memory.dmp --profile=Win7SP1x64 procdump --dump-dir=OUTDIR/	#µ¼³öËùÓĞ½ø³Ì
+python vol.py -f memory.dmp --profile=Win7SP1x64 procdump --dump-dir=OUTDIR/	#å¯¼å‡ºæ‰€æœ‰è¿›ç¨‹
 
-python vol.py -f memory.dmp --profile=Win7SP0x64 dlllist -p xxx			#ÁĞ³öÖ¸¶¨½ø³ÌºÅËùÒıÓÃµÄËùÓĞDLL
+python vol.py -f memory.dmp --profile=Win7SP0x64 dlllist -p xxx			#åˆ—å‡ºæŒ‡å®šè¿›ç¨‹å·æ‰€å¼•ç”¨çš„æ‰€æœ‰DLL
 
-python vol.py -f memory.dmp --profile=Win7SP1x64 dlldump -p xxx --regex=crypt --ignore-case --dump-dir=OUTDIR/	#µ¼³öcrypt*.dllµÄÄ£¿é(ºöÂÔ´óĞ¡Ğ´)
+python vol.py -f memory.dmp --profile=Win7SP1x64 dlldump -p xxx --regex=crypt --ignore-case --dump-dir=OUTDIR/	#å¯¼å‡ºcrypt*.dllçš„æ¨¡å—(å¿½ç•¥å¤§å°å†™)
 
-python vol.py -f memory.dmp --profile=Win7SP1x64 -p xxx dlldump --base xxxxxxxxxxxxxxxx ¨C-dump-dir=OUTDIR/	#µ¼³ö»ùÖ·ÎªxxxµÄDLL
+python vol.py -f memory.dmp --profile=Win7SP1x64 -p xxx dlldump --base xxxxxxxxxxxxxxxx â€“-dump-dir=OUTDIR/	#å¯¼å‡ºåŸºå€ä¸ºxxxçš„DLL
 
-*µ±DLL´úÂë±»»ìÏıÊ±£¬Ê¹ÓÃrundll32.exe½«¿ÉÒÉDLL¼ÓÔØ£¬È»ºóÊ¹ÓÃdlllistÁĞ³öËùÓĞ¼ÓÔØ½øÄÚ´æµÄDLL(´ËÊ±¿ÉÒÉDLLÒÑ¼ÓÃÜ)£¬ÕâÊ±ÔÙÓÃdlldumpµ¼³ö½âÃÜºóµÄ¶ñÒâDLL
+*å½“DLLä»£ç è¢«æ··æ·†æ—¶ï¼Œä½¿ç”¨rundll32.exeå°†å¯ç–‘DLLåŠ è½½ï¼Œç„¶åä½¿ç”¨dllliståˆ—å‡ºæ‰€æœ‰åŠ è½½è¿›å†…å­˜çš„DLL(æ­¤æ—¶å¯ç–‘DLLå·²åŠ å¯†)ï¼Œè¿™æ—¶å†ç”¨dlldumpå¯¼å‡ºè§£å¯†åçš„æ¶æ„DLL
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 malfind			#¼ì²â¶ñÒâ´úÂë(Í¨¹ı¼ì²âÊÇ·ñÓĞRWXµÄVADµØÖ·¿é)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 malfind			#æ£€æµ‹æ¶æ„ä»£ç (é€šè¿‡æ£€æµ‹æ˜¯å¦æœ‰RWXçš„VADåœ°å€å—)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 connections			#²é¿´ËùÓĞÍøÂçÁ¬½Ó
+python vol.py â€“f memory.mem --profile=Win7SP1x64 connections			#æŸ¥çœ‹æ‰€æœ‰ç½‘ç»œè¿æ¥
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 connscan			#²é¿´Ö®Ç°¶Ï¿ªµÄÍøÂçÁ¬½Ó
+python vol.py â€“f memory.mem --profile=Win7SP1x64 connscan			#æŸ¥çœ‹ä¹‹å‰æ–­å¼€çš„ç½‘ç»œè¿æ¥
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 hivelist			#ÁĞ³öÒ»Ğ©ÖØÒªµÄ×¢²á±í¼üµÄµØÖ·
+python vol.py â€“f memory.mem --profile=Win7SP1x64 hivelist			#åˆ—å‡ºä¸€äº›é‡è¦çš„æ³¨å†Œè¡¨é”®çš„åœ°å€
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 printkey -K xxx		#´òÓ¡×¢²á±íÖĞXXX¼üµÄÏêÏ¸ĞÅÏ¢
+python vol.py â€“f memory.mem --profile=Win7SP1x64 printkey -K xxx		#æ‰“å°æ³¨å†Œè¡¨ä¸­XXXé”®çš„è¯¦ç»†ä¿¡æ¯
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 userassist			#´òÓ¡×¢²á±íµÄuserassist¼ü
+python vol.py â€“f memory.mem --profile=Win7SP1x64 userassist			#æ‰“å°æ³¨å†Œè¡¨çš„userassisté”®
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 shimcache			#´òÓ¡ÓÃ»§×î½üÔËĞĞ¹ıµÄÈí¼ş
+python vol.py â€“f memory.mem --profile=Win7SP1x64 shimcache			#æ‰“å°ç”¨æˆ·æœ€è¿‘è¿è¡Œè¿‡çš„è½¯ä»¶
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 shellbags			#´òÓ¡×î½ü±»²Ù×÷¹ıµÄÎÄ¼ş
+python vol.py â€“f memory.mem --profile=Win7SP1x64 shellbags			#æ‰“å°æœ€è¿‘è¢«æ“ä½œè¿‡çš„æ–‡ä»¶
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 hashdump			#dump³ö¹şÏ£ÃÜÂë
+python vol.py â€“f memory.mem --profile=Win7SP1x64 hashdump			#dumpå‡ºå“ˆå¸Œå¯†ç 
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 lsadump			#dump³öLSAÃÜÂë(¸÷ÖÖ¼òµ¥·şÎñµÄÃÜÂë)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 lsadump			#dumpå‡ºLSAå¯†ç (å„ç§ç®€å•æœåŠ¡çš„å¯†ç )
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 sockets			#´òÓ¡ËùÓĞµÄÌ×½Ó×Ö
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 sockscan			#´òÓ¡ËùÓĞµÄÌ×½Ó×Ö
+python vol.py â€“f memory.mem --profile=Win7SP1x64 sockets			#æ‰“å°æ‰€æœ‰çš„å¥—æ¥å­—
+python vol.py â€“f memory.mem --profile=Win7SP1x64 sockscan			#æ‰“å°æ‰€æœ‰çš„å¥—æ¥å­—
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 connections			#´òÓ¡ËùÓĞµÄÍøÂçÁ¬½Ó
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 connscan			#´òÓ¡ËùÓĞµÄÍøÂçÁ¬½Ó
+python vol.py â€“f memory.mem --profile=Win7SP1x64 connections			#æ‰“å°æ‰€æœ‰çš„ç½‘ç»œè¿æ¥
+python vol.py â€“f memory.mem --profile=Win7SP1x64 connscan			#æ‰“å°æ‰€æœ‰çš„ç½‘ç»œè¿æ¥
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 yarascan -p xxx -W -Y "XX.XXX.5.140"		#ÔÚpidÎªxxxµÄÄÚ´æ¿Õ¼äÀï²éÕÒ"XX.XXX.5.14"¸ñÊ½µÄÊı¾İ
+python vol.py â€“f memory.mem --profile=Win7SP1x64 yarascan -p xxx -W -Y "XX.XXX.5.140"		#åœ¨pidä¸ºxxxçš„å†…å­˜ç©ºé—´é‡ŒæŸ¥æ‰¾"XX.XXX.5.14"æ ¼å¼çš„æ•°æ®
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 yarascan -p xxx --wide -Y "http"		#ÔÚpidÎªxxxµÄÄÚ´æ¿Õ¼äÀï²éÕÒ"http"¸ñÊ½µÄÊı¾İ
+python vol.py â€“f memory.mem --profile=Win7SP1x64 yarascan -p xxx --wide -Y "http"		#åœ¨pidä¸ºxxxçš„å†…å­˜ç©ºé—´é‡ŒæŸ¥æ‰¾"http"æ ¼å¼çš„æ•°æ®
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 -p xxx -Y "{38 24 d8 75}"			#ÔÚpidÎªxxxµÄÄÚ´æ¿Õ¼äÀï²éÕÒ"38 24 d8 75"¸ñÊ½µÄÊ®Áù½øÖÆ
+python vol.py â€“f memory.mem --profile=Win7SP1x64 -p xxx -Y "{38 24 d8 75}"			#åœ¨pidä¸ºxxxçš„å†…å­˜ç©ºé—´é‡ŒæŸ¥æ‰¾"38 24 d8 75"æ ¼å¼çš„åå…­è¿›åˆ¶
 ro
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 ethscan			#´òÓ¡Êı¾İ°ü
+python vol.py â€“f memory.mem --profile=Win7SP1x64 ethscan			#æ‰“å°æ•°æ®åŒ…
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 netscan			#´òÓ¡ËùÓĞµÄÍøÂçÁ¬½Ó(ÊÊÓÃÓÚWin7ÒÔÉÏ)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 netscan			#æ‰“å°æ‰€æœ‰çš„ç½‘ç»œè¿æ¥(é€‚ç”¨äºWin7ä»¥ä¸Š)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 iehistory -p xxx		#´òÓ¡IE½ø³ÌµÄÀúÊ·¼ÇÂ¼(Ö»ÊÊÓÃÓÚIE4 ~ IE9)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 iehistory -p xxx		#æ‰“å°IEè¿›ç¨‹çš„å†å²è®°å½•(åªé€‚ç”¨äºIE4 ~ IE9)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 yarascan -Y "/[a-zA-Z0-9\-\.]+\.(com|org|net|mil|edu|biz|name|info)/" -p xxx	#ËÑË÷ÍøÖ·
+python vol.py â€“f memory.mem --profile=Win7SP1x64 yarascan -Y "/[a-zA-Z0-9\-\.]+\.(com|org|net|mil|edu|biz|name|info)/" -p xxx	#æœç´¢ç½‘å€
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 filescan | grep -i hosts	#²éÕÒhostsÎÄ¼ş
+python vol.py â€“f memory.mem --profile=Win7SP1x64 filescan | grep -i hosts	#æŸ¥æ‰¾hostsæ–‡ä»¶
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 dumpfiles -Q 0xXXX -D OUTDIR --name	#½«»ùÖ·Îª0xXXXµÄÎÄ¼şdump³öÀ´
+python vol.py â€“f memory.mem --profile=Win7SP1x64 dumpfiles -Q 0xXXX -D OUTDIR --name	#å°†åŸºå€ä¸º0xXXXçš„æ–‡ä»¶dumpå‡ºæ¥
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 svcscan --verbose			#ÁĞ³öËùÓĞ¿ªÆôµÄ·şÎñ
+python vol.py â€“f memory.mem --profile=Win7SP1x64 svcscan --verbose			#åˆ—å‡ºæ‰€æœ‰å¼€å¯çš„æœåŠ¡
 
-Í¨¹ıNtLoadDriver¼ÓÔØÇı¶¯£¬²»»á±»¼ÇÂ¼µ½ÏµÍ³ÈÕÖ¾£¬Çı¶¯½á¹¹ÌåÒ²²»»á³öÏÖÔÚservices.exe£¬ÓÃsvcscan²å¼şÒ²×ÔÈ»ËÑË÷²»µ½
-NtSetSystemInformationÊÇ¸ö¸üÒş±ÎµÄ¼ÓÔØÇı¶¯µÄ·½·¨£¬ÕâÖÖ·½·¨»¹²»ĞèÒª×¢²á×¢²á±íÏî£¬¶øÇÒÇı¶¯¼ÓÔØºóºÜÄÑ±»Ğ¶ÔØ
+é€šè¿‡NtLoadDriveråŠ è½½é©±åŠ¨ï¼Œä¸ä¼šè¢«è®°å½•åˆ°ç³»ç»Ÿæ—¥å¿—ï¼Œé©±åŠ¨ç»“æ„ä½“ä¹Ÿä¸ä¼šå‡ºç°åœ¨services.exeï¼Œç”¨svcscanæ’ä»¶ä¹Ÿè‡ªç„¶æœç´¢ä¸åˆ°
+NtSetSystemInformationæ˜¯ä¸ªæ›´éšè”½çš„åŠ è½½é©±åŠ¨çš„æ–¹æ³•ï¼Œè¿™ç§æ–¹æ³•è¿˜ä¸éœ€è¦æ³¨å†Œæ³¨å†Œè¡¨é¡¹ï¼Œè€Œä¸”é©±åŠ¨åŠ è½½åå¾ˆéš¾è¢«å¸è½½
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 modules				#Í¨¹ıÁ´±íÕ¹Ê¾ËùÓĞÄ£¿é
+python vol.py â€“f memory.mem --profile=Win7SP1x64 modules				#é€šè¿‡é“¾è¡¨å±•ç¤ºæ‰€æœ‰æ¨¡å—
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 modscan				#Í¨¹ıÉ¨ÃèÄ£¿é½á¹¹À´Õ¹Ê¾ËùÓĞÄ£¿é
+python vol.py â€“f memory.mem --profile=Win7SP1x64 modscan				#é€šè¿‡æ‰«ææ¨¡å—ç»“æ„æ¥å±•ç¤ºæ‰€æœ‰æ¨¡å—
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 unloadedmodules			#Õ¹Ê¾ËùÓĞÒÑ±»Ğ¶ÔØµÄÄ£¿é
+python vol.py â€“f memory.mem --profile=Win7SP1x64 unloadedmodules			#å±•ç¤ºæ‰€æœ‰å·²è¢«å¸è½½çš„æ¨¡å—
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 moddump --regex=tcp --ignore-case --dump-dir=OUTDIR/	#²éÕÒ"*tcp*"Ä£¿é
+python vol.py â€“f memory.mem --profile=Win7SP1x64 moddump --regex=tcp --ignore-case --dump-dir=OUTDIR/	#æŸ¥æ‰¾"*tcp*"æ¨¡å—
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 threads -F OrphanThread		#É¨Ãè¹Â¶ùÏß³Ì
+python vol.py â€“f memory.mem --profile=Win7SP1x64 threads -F OrphanThread		#æ‰«æå­¤å„¿çº¿ç¨‹
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 driverscan				#É¨ÃèËùÓĞÇı¶¯
+python vol.py â€“f memory.mem --profile=Win7SP1x64 driverscan				#æ‰«ææ‰€æœ‰é©±åŠ¨
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 driverirp -r tcpip			#²éÕÒtcpipÇı¶¯Ëùµ÷ÓÃµÄËùÓĞIRPº¯Êı£¬ÓÃÒÔ¼ì²éÊÇ·ñ±»HOOK
+python vol.py â€“f memory.mem --profile=Win7SP1x64 driverirp -r tcpip			#æŸ¥æ‰¾tcpipé©±åŠ¨æ‰€è°ƒç”¨çš„æ‰€æœ‰IRPå‡½æ•°ï¼Œç”¨ä»¥æ£€æŸ¥æ˜¯å¦è¢«HOOK
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 devicetree				#²é¿´ÄÚ´æµÄÉè±¸Ê÷
+python vol.py â€“f memory.mem --profile=Win7SP1x64 devicetree				#æŸ¥çœ‹å†…å­˜çš„è®¾å¤‡æ ‘
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 sstd					#Ã¶¾ÙSSTD±í
+python vol.py â€“f memory.mem --profile=Win7SP1x64 sstd					#æšä¸¾SSTDè¡¨
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 callbacks				#ÁĞ³öËùÓĞÄÚºË»Øµ÷
+python vol.py â€“f memory.mem --profile=Win7SP1x64 callbacks				#åˆ—å‡ºæ‰€æœ‰å†…æ ¸å›è°ƒ
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 timers					#ÁĞ³öËùÓĞ¼ÆÊ±Æ÷
+python vol.py â€“f memory.mem --profile=Win7SP1x64 timers					#åˆ—å‡ºæ‰€æœ‰è®¡æ—¶å™¨
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 sessions				#ÁĞ³öËùÓĞ»á»°ÏÂµÄËùÓĞ½ø³Ì
+python vol.py â€“f memory.mem --profile=Win7SP1x64 sessions				#åˆ—å‡ºæ‰€æœ‰ä¼šè¯ä¸‹çš„æ‰€æœ‰è¿›ç¨‹
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 consoles				#²é¿´¿ØÖÆÌ¨ÀúÊ·ÃüÁî
+python vol.py â€“f memory.mem --profile=Win7SP1x64 consoles				#æŸ¥çœ‹æ§åˆ¶å°å†å²å‘½ä»¤
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 wndscan				#Õ¹Ê¾window station(Ö÷ÒªÓÃÓÚÉó¼ÆÕ³Ìù°å)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 wndscan				#å±•ç¤ºwindow station(ä¸»è¦ç”¨äºå®¡è®¡ç²˜è´´æ¿)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 wintree | grep CLIPBRDWNDCLASS		#ÁĞ³öËùÓĞ¼àÌıÕ³Ìù°åµÄ½ø³Ì
+python vol.py â€“f memory.mem --profile=Win7SP1x64 wintree | grep CLIPBRDWNDCLASS		#åˆ—å‡ºæ‰€æœ‰ç›‘å¬ç²˜è´´æ¿çš„è¿›ç¨‹
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 deskscan				#ÁĞ³öÃ¿¸ö×ÀÃæËùÓµÓĞµÄ½ø³Ì
+python vol.py â€“f memory.mem --profile=Win7SP1x64 deskscan				#åˆ—å‡ºæ¯ä¸ªæ¡Œé¢æ‰€æ‹¥æœ‰çš„è¿›ç¨‹
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 mftparser				#½âÎöMFTÎÄ¼ş
+python vol.py â€“f memory.mem --profile=Win7SP1x64 mftparser				#è§£æMFTæ–‡ä»¶
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 apihook				#²éÕÒ±»¹Ò¹³µÄº¯Êı(Í¨¹ıÕì²âÓĞÎŞJMPµ½Íâ²¿µØÖ·µÄÃüÁî)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 apihook				#æŸ¥æ‰¾è¢«æŒ‚é’©çš„å‡½æ•°(é€šè¿‡ä¾¦æµ‹æœ‰æ— JMPåˆ°å¤–éƒ¨åœ°å€çš„å‘½ä»¤)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 truecryptpassphrase			#½âÎöTureCrypt
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 truecryptsummary			#»ã×ÜTureCrypt
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 truecryptmaster			#ÌáÈ¡Ö÷ÒªµÄturecrypt
+python vol.py â€“f memory.mem --profile=Win7SP1x64 truecryptpassphrase			#è§£æTureCrypt
+python vol.py â€“f memory.mem --profile=Win7SP1x64 truecryptsummary			#æ±‡æ€»TureCrypt
+python vol.py â€“f memory.mem --profile=Win7SP1x64 truecryptmaster			#æå–ä¸»è¦çš„turecrypt
 
-strings -td -el -a memory.dmp >> strings.txt						#ÌáÈ¡dumpÎÄ¼şÖĞµÄ×Ö·û´®(-el:±àÂë	-td:Ê®½øÖÆÆ«ÒÆ	-a:¸²¸ÇÈ«ÎÄ¼ş)
-python vol.py -f memory.mem --profile=Win7SP1x64 strings -s strings.txt > translated.txt	#ÓÅ»¯ÎÄ¼şstrings.txtÖĞµÄ×Ö·û´®µÄĞÅÏ¢
+strings -td -el -a memory.dmp >> strings.txt						#æå–dumpæ–‡ä»¶ä¸­çš„å­—ç¬¦ä¸²(-el:ç¼–ç 	-td:åè¿›åˆ¶åç§»	-a:è¦†ç›–å…¨æ–‡ä»¶)
+python vol.py -f memory.mem --profile=Win7SP1x64 strings -s strings.txt > translated.txt	#ä¼˜åŒ–æ–‡ä»¶strings.txtä¸­çš„å­—ç¬¦ä¸²çš„ä¿¡æ¯
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 cmdscan				#É¨ÃæÀúÊ·CMDÃüÁî
+python vol.py â€“f memory.mem --profile=Win7SP1x64 cmdscan				#æ‰«é¢å†å²CMDå‘½ä»¤
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 consoles				#ÌáÈ¡ËùÓĞ¿ØÖÆÌ¨µÄÀúÊ·ÃüÁî(°üÀ¨python,powershellµÈ)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 consoles				#æå–æ‰€æœ‰æ§åˆ¶å°çš„å†å²å‘½ä»¤(åŒ…æ‹¬python,powershellç­‰)
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 timeliner				#Õ¹Ê¾Ê±¼äÖáÊÂ¼ş
+python vol.py â€“f memory.mem --profile=Win7SP1x64 timeliner				#å±•ç¤ºæ—¶é—´è½´äº‹ä»¶
 
-python vol.py ¨Cf memory.mem --profile=Win7SP1x64 cachedump				#»ñÈ¡»º´ædump(¿É»ñµÃÔÚÄÚ´æÖĞµÄÃÜÂë)
+python vol.py â€“f memory.mem --profile=Win7SP1x64 cachedump				#è·å–ç¼“å­˜dump(å¯è·å¾—åœ¨å†…å­˜ä¸­çš„å¯†ç )
